@@ -3,24 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f6f7fc">
+  <meta name="theme-color" content="#101629">
   <title>Undead Warlock Field Guide — WoW Forever</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Spectral:wght@400;500;600;700&display=swap');
 
     :root {
-      color-scheme: light;
-      --ink: #202846;
-      --muted: #596783;
-      --faint: #8792aa;
-      --night: #f5f7fc;
-      --panel: #ffffff;
-      --line: #dce2ef;
-      --moss: #6258cf;
-      --moss-dark: #a7a1e8;
-      --rust: #3c78c5;
-      --gold: #426da8;
-      --green: #23876e;
+      color-scheme: dark;
+      --ink: #f2f4ff;
+      --muted: #b2bdd8;
+      --faint: #818eae;
+      --night: #101629;
+      --panel: #1b2540;
+      --line: #35415f;
+      --moss: #aa96ff;
+      --moss-dark: #6474a5;
+      --rust: #79b5f5;
+      --gold: #91c8ff;
+      --green: #49c99a;
       --font-display: 'Spectral', Georgia, serif;
       --font-mono: 'DM Mono', monospace;
     }
@@ -33,7 +33,7 @@
       color: var(--ink);
       background: var(--night);
       font-family: var(--font-display);
-      background-image: linear-gradient(90deg, transparent 49.95%, #6875d008 50%, transparent 50.05%), radial-gradient(ellipse at 75% -18%, #e8e7fa 0, transparent 46%);
+      background-image: linear-gradient(90deg, transparent 49.95%, #b8a8ff08 50%, transparent 50.05%), radial-gradient(ellipse at 78% -18%, #6953c333 0, transparent 45%), linear-gradient(135deg, #101629, #151d35 62%, #11192e);
     }
     button, input { font: inherit; }
     button { color: inherit; }
@@ -59,12 +59,12 @@
     .eyebrow, .section-kicker { color: var(--moss); font: 11px var(--font-mono); letter-spacing: .11em; text-transform: uppercase; }
     h1 { margin: 13px 0 11px; font-size: clamp(42px, 6vw, 72px); font-weight: 500; line-height: .98; letter-spacing: 0; }
     h1 span { color: var(--moss); font-style: italic; }
-    .intro-copy { max-width: 590px; margin: 0; color: #52607c; font-size: 17px; line-height: 1.65; }
+    .intro-copy { max-width: 590px; margin: 0; color: #c1cae0; font-size: 17px; line-height: 1.65; }
     .edition-note { border-left: 1px solid var(--moss-dark); padding: 4px 0 4px 16px; color: var(--muted); font: 11px/1.8 var(--font-mono); }
     .edition-note strong { display: block; color: var(--gold); font-weight: 400; }
 
     .toolbar { min-height: 69px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-    .faction-tabs { display: inline-flex; gap: 3px; padding: 4px; background: #edf0f8; }
+    .faction-tabs { display: inline-flex; gap: 3px; padding: 4px; background: #0b1122; }
     .faction-tabs button, .filter-button {
       min-height: 35px;
       padding: 0 14px;
@@ -78,13 +78,13 @@
     .faction-tabs button[aria-pressed="true"] { color: var(--ink); border-color: var(--line); background: var(--panel); }
     .search-wrap { position: relative; flex: 1 1 190px; max-width: 320px; margin-left: auto; }
     .search-wrap::before { content: '⌕'; position: absolute; left: 12px; top: 5px; color: var(--faint); font-size: 20px; }
-    #search { width: 100%; height: 37px; padding: 0 12px 0 34px; border: 1px solid var(--line); outline: none; background: #ffffff; color: var(--ink); font: 11px var(--font-mono); }
+    #search { width: 100%; height: 37px; padding: 0 12px 0 34px; border: 1px solid var(--line); outline: none; background: #0e162a; color: var(--ink); font: 11px var(--font-mono); }
     #search:focus { border-color: var(--moss-dark); }
     #search::placeholder { color: var(--faint); }
     .filter-button { border-color: var(--line); white-space: nowrap; }
     .filter-button:hover, .filter-button[aria-pressed="true"] { color: var(--moss); border-color: var(--moss-dark); }
     .progress { flex-basis: 100%; display: flex; gap: 12px; align-items: center; padding: 0 0 13px; color: var(--muted); font: 10px var(--font-mono); }
-    .progress-track { height: 3px; flex: 1; background: #dfe6e9; }
+    .progress-track { height: 3px; flex: 1; background: #35415f; }
     .progress-fill { width: 0; height: 100%; background: var(--green); transition: width .25s ease; }
 
     .main-grid { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 46px; padding: 39px 0 80px; }
@@ -103,9 +103,9 @@
     .side-heading { margin: 0 0 14px; color: var(--faint); font: 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
     .route-nav { display: grid; gap: 3px; }
     .route-nav a { display: flex; justify-content: space-between; padding: 9px 10px; color: var(--muted); text-decoration: none; border-left: 1px solid var(--line); font-size: 14px; transition: .15s ease; }
-    .route-nav a:hover, .route-nav a.active { color: var(--ink); border-left-color: var(--moss); background: #6258cf12; }
+    .route-nav a:hover, .route-nav a.active { color: var(--ink); border-left-color: var(--moss); background: #aa96ff12; }
     .route-nav small { color: var(--faint); font: 10px var(--font-mono); }
-    .field-tip { margin-top: 34px; padding: 15px 14px; border: 1px solid var(--line); background: #ffffff; }
+    .field-tip { margin-top: 34px; padding: 15px 14px; border: 1px solid var(--line); background: #ffffff07; }
     .field-tip h3 { margin: 0 0 8px; color: var(--green); font: 500 15px var(--font-display); }
     .field-tip p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
 
@@ -121,7 +121,7 @@
       min-height: 95px;
       padding: 14px 16px;
       border: 1px solid var(--line);
-      background: linear-gradient(105deg, #ffffff, #f7f8ff 68%);
+      background: linear-gradient(105deg, #202b49, #18223b 68%);
       transition: border-color .2s, opacity .2s, transform .2s;
       animation: rise .35s ease both;
     }
@@ -132,21 +132,21 @@
     .level { color: var(--moss); font: 11px var(--font-mono); }
     .zone-title { margin: 0 0 3px; font-size: 19px; font-weight: 500; }
     .zone-meta { margin: 0; color: var(--muted); font: 10px/1.5 var(--font-mono); }
-    .zone-note { color: #4a6486; font-size: 12px; line-height: 1.35; }
-    .check { width: 28px; height: 28px; border: 1px solid #aeb9cd; background: transparent; color: var(--green); cursor: pointer; font-size: 16px; }
+    .zone-note { color: #b3c9f2; font-size: 12px; line-height: 1.35; }
+    .check { width: 28px; height: 28px; border: 1px solid #596a93; background: transparent; color: var(--green); cursor: pointer; font-size: 16px; }
     .check:hover { background: #23876e12; border-color: var(--green); }
     .empty { display: none; padding: 32px; border: 1px dashed var(--line); color: var(--muted); text-align: center; font: 12px var(--font-mono); }
-    .level-planner { display: grid; grid-template-columns: minmax(210px, .7fr) 1.3fr; gap: 28px; margin: 26px 0 0; padding: 22px; border: 1px solid var(--line); background: linear-gradient(110deg, #ffffff, #f2f3ff 70%); }
+    .level-planner { display: grid; grid-template-columns: minmax(210px, .7fr) 1.3fr; gap: 28px; margin: 26px 0 0; padding: 22px; border: 1px solid var(--line); background: linear-gradient(110deg, #202b49, #171f38 70%); }
     .level-control { display: grid; align-content: start; gap: 12px; }
     .level-control label { color: var(--moss); font: 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
     .level-control output { color: var(--ink); font: 500 34px var(--font-display); }
     .level-control input[type="range"] { width: 100%; accent-color: var(--moss); cursor: pointer; }
-    .level-control input[type="number"] { width: 74px; height: 36px; border: 1px solid var(--line); background: #ffffff; color: var(--ink); padding: 0 9px; font: 12px var(--font-mono); }
+    .level-control input[type="number"] { width: 74px; height: 36px; border: 1px solid var(--line); background: #0e162a; color: var(--ink); padding: 0 9px; font: 12px var(--font-mono); }
     .level-number { display: flex; align-items: center; gap: 10px; color: var(--muted); font: 10px var(--font-mono); }
     .level-brief h2 { margin: 0 0 12px; font-size: 22px; font-weight: 500; }
     .level-brief dl { display: grid; grid-template-columns: 90px 1fr; gap: 9px 14px; margin: 0; font-size: 13px; }
     .level-brief dt { color: var(--gold); font: 10px var(--font-mono); text-transform: uppercase; }
-    .level-brief dd { margin: 0; color: #4e5e7a; line-height: 1.45; }
+    .level-brief dd { margin: 0; color: #d0d8ec; line-height: 1.45; }
     .guide { padding: 36px 0 68px; }
     .guide-nav { display: flex; overflow-x: auto; gap: 4px; padding: 15px 0 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
     .guide-nav button { flex: 0 0 auto; min-height: 40px; padding: 0 15px; border: 1px solid transparent; border-bottom: 0; background: transparent; color: var(--muted); cursor: pointer; font: 10px var(--font-mono); }
@@ -158,7 +158,7 @@
     .guide-block h3 { margin: 0 0 7px; color: var(--gold); font-size: 18px; font-weight: 500; }
     .guide-lead { max-width: 760px; margin: 0 0 22px; color: #b7b7aa; font-size: 15px; line-height: 1.65; }
     .guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-    .guide-item { padding: 16px 17px; border: 1px solid var(--line); background: #ffffff; }
+    .guide-item { padding: 16px 17px; border: 1px solid var(--line); background: #ffffff07; }
     .guide-item p, .guide-item li { color: var(--muted); font-size: 13px; line-height: 1.55; }
     .guide-item p { margin: 0; }
     .guide-item ul { margin: 8px 0 0; padding-left: 18px; }
@@ -166,14 +166,17 @@
     .guide-table th, .guide-table td { padding: 12px 13px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
     .guide-table th { color: var(--moss); font: 10px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
     .guide-table td:first-child { width: 100px; color: var(--gold); font-family: var(--font-mono); white-space: nowrap; }
-    .guide-table td { color: #4e5e7a; line-height: 1.5; }
-    .notice { margin: 18px 0 0; padding: 13px 15px; border-left: 2px solid var(--green); background: #23876e0d; color: #385e58; font-size: 13px; line-height: 1.55; }
+    .guide-table td { color: #d0d8ec; line-height: 1.5; }
+    .notice { margin: 18px 0 0; padding: 13px 15px; border-left: 2px solid var(--green); background: #49c99a14; color: #bcebd9; font-size: 13px; line-height: 1.55; }
     .macro-list { display: grid; gap: 12px; }
-    .macro { border: 1px solid var(--line); background: #f2f4ff; }
+    .setup-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 0 0 20px; padding: 0; list-style: none; counter-reset: setup; }
+    .setup-steps li { min-height: 100px; padding: 12px; border: 1px solid var(--line); background: #ffffff0a; color: var(--muted); font-size: 12px; line-height: 1.5; counter-increment: setup; }
+    .setup-steps li::before { content: '0' counter(setup); display: block; margin-bottom: 8px; color: var(--moss); font: 11px var(--font-mono); }
+    .macro { border: 1px solid var(--line); background: #0d1427; }
     .macro-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 10px 13px; border-bottom: 1px solid var(--line); }
     .macro-head strong { color: var(--ink); font-size: 14px; font-weight: 500; }
     .macro-head span { color: var(--faint); font: 10px var(--font-mono); }
-    .macro pre { overflow-x: auto; margin: 0; padding: 13px; color: #5148b5; font: 12px/1.65 var(--font-mono); white-space: pre; }
+    .macro pre { overflow-x: auto; margin: 0; padding: 13px; color: #b8a7ff; font: 12px/1.65 var(--font-mono); white-space: pre; }
     .copy-button { min-height: 30px; padding: 0 10px; border: 1px solid var(--line); background: transparent; color: var(--muted); cursor: pointer; font: 10px var(--font-mono); }
     .copy-button:hover { border-color: var(--moss-dark); color: var(--moss); }
     .sources { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 20px; }
@@ -199,6 +202,7 @@
       .level-planner { grid-template-columns: 1fr; gap: 18px; padding: 16px; }
       .level-brief dl { grid-template-columns: 78px 1fr; }
       .guide-grid { grid-template-columns: 1fr; }
+      .setup-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .guide-block { padding: 29px 0; }
       .guide-block h2 { font-size: 25px; }
       .guide-table { font-size: 12px; }
@@ -356,7 +360,14 @@
     <section class="guide-block" id="panel-macros" role="tabpanel" tabindex="0" aria-labelledby="tab-macros" hidden>
       <div class="section-kicker">Paste into the in-game macro window</div>
       <h2 id="macros-title">Useful macros</h2>
-      <p class="guide-lead">Create one macro per box. Test after launch; custom client behavior or localized spell names may require adjustment.</p>
+      <p class="guide-lead">Set each macro up once, then put it on a convenient key. Create one macro per box and test it on a safe target.</p>
+      <ol class="setup-steps">
+        <li>Open the game menu with Esc and choose Macros. You can also try <code>/macro</code> in chat.</li>
+        <li>Choose General Macros, click New, enter a short name, and choose an icon. Use the question-mark icon for automatic spell icons.</li>
+        <li>Copy one snippet below into the macro text box and click Save. Make a separate macro for each snippet.</li>
+        <li>Drag the new icon from the macro window onto your action bar, then bind a key in Key Bindings if desired.</li>
+      </ol>
+      <p class="notice">If a macro does nothing, check the exact spell name for your client language and confirm the required spell or pet is unlocked. Macros cannot automate a full rotation or bypass the global cooldown.</p>
       <div class="macro-list">
         <article class="macro"><div class="macro-head"><div><strong>Pet attack + Corruption</strong><br><span>Starts your pet and applies your main instant DoT.</span></div><button class="copy-button" type="button" data-copy="macro-pet-dot">Copy</button></div><pre><code id="macro-pet-dot">#showtooltip Corruption
     /petattack
