@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171b19">
+  <title>Undead Warlock Field Guide — WoW Forever</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Spectral:wght@400;500;600;700&display=swap');
+
+    :root {
+      color-scheme: dark;
+      --ink: #e8e5d9;
+      --muted: #9c9b8e;
+      --faint: #666b61;
+      --night: #171b19;
+      --panel: #202522;
+      --line: #394039;
+      --moss: #a9bd73;
+      --moss-dark: #64734b;
+      --rust: #d78c64;
+      --gold: #d8c28c;
+      --font-display: 'Spectral', Georgia, serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background: var(--night);
+      font-family: var(--font-display);
+      background-image: linear-gradient(90deg, transparent 49.95%, #ffffff05 50%, transparent 50.05%), radial-gradient(ellipse at 75% -18%, #65734d2b, transparent 46%);
+    }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    .shell { max-width: 1180px; margin: 0 auto; padding: 0 42px; }
+
+    header {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .06em;
+      color: var(--muted);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; color: var(--ink); text-transform: uppercase; }
+    .brand-mark { width: 25px; height: 25px; display: grid; place-items: center; border: 1px solid var(--moss-dark); color: var(--moss); font-size: 16px; }
+    .header-meta { display: flex; align-items: center; gap: 24px; }
+    .live-dot { display: inline-block; width: 6px; height: 6px; margin-right: 7px; border-radius: 50%; background: var(--moss); vertical-align: 1px; }
+
+    .intro { padding: 69px 0 40px; display: grid; grid-template-columns: minmax(0, 1fr) 230px; gap: 36px; align-items: end; animation: rise .6s ease both; }
+    .eyebrow, .section-kicker { color: var(--moss); font: 11px var(--font-mono); letter-spacing: .11em; text-transform: uppercase; }
+    h1 { margin: 13px 0 11px; font-size: clamp(42px, 6vw, 72px); font-weight: 500; line-height: .98; letter-spacing: 0; }
+    h1 span { color: var(--moss); font-style: italic; }
+    .intro-copy { max-width: 590px; margin: 0; color: #b7b7aa; font-size: 17px; line-height: 1.65; }
+    .edition-note { border-left: 1px solid var(--moss-dark); padding: 4px 0 4px 16px; color: var(--muted); font: 11px/1.8 var(--font-mono); }
+    .edition-note strong { display: block; color: var(--gold); font-weight: 400; }
+
+    .toolbar { min-height: 69px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .faction-tabs { display: inline-flex; gap: 3px; padding: 4px; background: #101311; }
+    .faction-tabs button, .filter-button {
+      min-height: 35px;
+      padding: 0 14px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: 11px var(--font-mono);
+      letter-spacing: .04em;
+    }
+    .faction-tabs button[aria-pressed="true"] { color: var(--ink); border-color: var(--line); background: var(--panel); }
+    .search-wrap { position: relative; flex: 1 1 190px; max-width: 320px; margin-left: auto; }
+    .search-wrap::before { content: '⌕'; position: absolute; left: 12px; top: 5px; color: var(--faint); font-size: 20px; }
+    #search { width: 100%; height: 37px; padding: 0 12px 0 34px; border: 1px solid var(--line); outline: none; background: #101311; color: var(--ink); font: 11px var(--font-mono); }
+    #search:focus { border-color: var(--moss-dark); }
+    #search::placeholder { color: var(--faint); }
+    .filter-button { border-color: var(--line); white-space: nowrap; }
+    .filter-button:hover, .filter-button[aria-pressed="true"] { color: var(--moss); border-color: var(--moss-dark); }
+    .progress { flex-basis: 100%; display: flex; gap: 12px; align-items: center; padding: 0 0 13px; color: var(--muted); font: 10px var(--font-mono); }
+    .progress-track { height: 3px; flex: 1; background: #394039; }
+    .progress-fill { width: 0; height: 100%; background: var(--moss); transition: width .25s ease; }
+
+    .main-grid { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 46px; padding: 39px 0 80px; }
+    .route-dropdown { margin: 28px 0 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .route-dropdown > summary { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 56px; padding: 8px 4px; cursor: pointer; list-style: none; }
+    .route-dropdown > summary::-webkit-details-marker { display: none; }
+    .route-dropdown > summary::before { content: '+'; width: 23px; height: 23px; display: grid; place-items: center; border: 1px solid var(--moss-dark); color: var(--moss); font: 16px var(--font-mono); }
+    .route-dropdown[open] > summary::before { content: '−'; }
+    .route-dropdown > summary .route-kicker { color: var(--moss); font: 10px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+    .route-dropdown > summary strong { color: var(--ink); font-size: 15px; font-weight: 500; }
+    .route-dropdown > summary .route-prompt { margin-left: auto; color: var(--muted); font: 10px var(--font-mono); }
+    .route-dropdown[open] > summary .route-prompt::after { content: 'Collapse'; }
+    .route-dropdown:not([open]) > summary .route-prompt::after { content: 'Expand'; }
+    .route-dropdown .main-grid { padding-top: 14px; }
+    aside { align-self: start; position: sticky; top: 20px; }
+    .side-heading { margin: 0 0 14px; color: var(--faint); font: 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+    .route-nav { display: grid; gap: 3px; }
+    .route-nav a { display: flex; justify-content: space-between; padding: 9px 10px; color: var(--muted); text-decoration: none; border-left: 1px solid var(--line); font-size: 14px; transition: .15s ease; }
+    .route-nav a:hover, .route-nav a.active { color: var(--ink); border-left-color: var(--moss); background: #ffffff08; }
+    .route-nav small { color: var(--faint); font: 10px var(--font-mono); }
+    .field-tip { margin-top: 34px; padding: 15px 14px; border: 1px solid var(--line); background: #ffffff04; }
+    .field-tip h3 { margin: 0 0 8px; color: var(--gold); font: 500 15px var(--font-display); }
+    .field-tip p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+
+    .route-heading { margin: 0 0 14px; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+    .route-heading h2 { margin: 0; font-size: 22px; font-weight: 500; }
+    .route-heading p { margin: 0; color: var(--muted); font: 10px var(--font-mono); }
+    .zone-list { display: grid; gap: 8px; }
+    .zone {
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr) 120px 32px;
+      align-items: center;
+      gap: 15px;
+      min-height: 95px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      background: linear-gradient(105deg, #242a25, #1d221f 68%);
+      transition: border-color .2s, opacity .2s, transform .2s;
+      animation: rise .35s ease both;
+    }
+    .zone:hover { border-color: #59614f; transform: translateX(2px); }
+    .zone.current { border-color: var(--moss-dark); }
+    .zone.completed { opacity: .53; }
+    .zone.completed .zone-title { text-decoration: line-through; text-decoration-color: var(--moss); }
+    .level { color: var(--moss); font: 11px var(--font-mono); }
+    .zone-title { margin: 0 0 3px; font-size: 19px; font-weight: 500; }
+    .zone-meta { margin: 0; color: var(--muted); font: 10px/1.5 var(--font-mono); }
+    .zone-note { color: #c3b991; font-size: 12px; line-height: 1.35; }
+    .check { width: 28px; height: 28px; border: 1px solid #59614f; background: transparent; color: var(--moss); cursor: pointer; font-size: 16px; }
+    .check:hover { background: #a9bd7316; border-color: var(--moss); }
+    .empty { display: none; padding: 32px; border: 1px dashed var(--line); color: var(--muted); text-align: center; font: 12px var(--font-mono); }
+    .level-planner { display: grid; grid-template-columns: minmax(210px, .7fr) 1.3fr; gap: 28px; margin: 26px 0 0; padding: 22px; border: 1px solid var(--line); background: linear-gradient(110deg, #242a25, #1d221f 70%); }
+    .level-control { display: grid; align-content: start; gap: 12px; }
+    .level-control label { color: var(--moss); font: 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+    .level-control output { color: var(--ink); font: 500 34px var(--font-display); }
+    .level-control input[type="range"] { width: 100%; accent-color: var(--moss); cursor: pointer; }
+    .level-control input[type="number"] { width: 74px; height: 36px; border: 1px solid var(--line); background: #101311; color: var(--ink); padding: 0 9px; font: 12px var(--font-mono); }
+    .level-number { display: flex; align-items: center; gap: 10px; color: var(--muted); font: 10px var(--font-mono); }
+    .level-brief h2 { margin: 0 0 12px; font-size: 22px; font-weight: 500; }
+    .level-brief dl { display: grid; grid-template-columns: 90px 1fr; gap: 9px 14px; margin: 0; font-size: 13px; }
+    .level-brief dt { color: var(--gold); font: 10px var(--font-mono); text-transform: uppercase; }
+    .level-brief dd { margin: 0; color: #c2c0b5; line-height: 1.45; }
+    .guide { padding: 36px 0 68px; }
+    .guide-nav { display: flex; overflow-x: auto; gap: 4px; padding: 15px 0 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .guide-nav button { flex: 0 0 auto; min-height: 40px; padding: 0 15px; border: 1px solid transparent; border-bottom: 0; background: transparent; color: var(--muted); cursor: pointer; font: 10px var(--font-mono); }
+    .guide-nav button[aria-selected="true"] { border-color: var(--line); background: var(--panel); color: var(--moss); }
+    .guide-nav button:hover { color: var(--ink); }
+    .guide-block { padding: 36px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 20px; }
+    .guide-block:last-child { border-bottom: 0; }
+    .guide-block h2 { margin: 8px 0 10px; font-size: 29px; font-weight: 500; }
+    .guide-block h3 { margin: 0 0 7px; color: var(--gold); font-size: 18px; font-weight: 500; }
+    .guide-lead { max-width: 760px; margin: 0 0 22px; color: #b7b7aa; font-size: 15px; line-height: 1.65; }
+    .guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .guide-item { padding: 16px 17px; border: 1px solid var(--line); background: #ffffff04; }
+    .guide-item p, .guide-item li { color: var(--muted); font-size: 13px; line-height: 1.55; }
+    .guide-item p { margin: 0; }
+    .guide-item ul { margin: 8px 0 0; padding-left: 18px; }
+    .guide-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .guide-table th, .guide-table td { padding: 12px 13px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .guide-table th { color: var(--moss); font: 10px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+    .guide-table td:first-child { width: 100px; color: var(--gold); font-family: var(--font-mono); white-space: nowrap; }
+    .guide-table td { color: #c2c0b5; line-height: 1.5; }
+    .notice { margin: 18px 0 0; padding: 13px 15px; border-left: 2px solid var(--rust); background: #d78c640b; color: #c7b7a9; font-size: 13px; line-height: 1.55; }
+    .macro-list { display: grid; gap: 12px; }
+    .macro { border: 1px solid var(--line); background: #101311; }
+    .macro-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 10px 13px; border-bottom: 1px solid var(--line); }
+    .macro-head strong { color: var(--ink); font-size: 14px; font-weight: 500; }
+    .macro-head span { color: var(--faint); font: 10px var(--font-mono); }
+    .macro pre { overflow-x: auto; margin: 0; padding: 13px; color: var(--moss); font: 12px/1.65 var(--font-mono); white-space: pre; }
+    .copy-button { min-height: 30px; padding: 0 10px; border: 1px solid var(--line); background: transparent; color: var(--muted); cursor: pointer; font: 10px var(--font-mono); }
+    .copy-button:hover { border-color: var(--moss-dark); color: var(--moss); }
+    .sources { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 20px; }
+    .sources a { color: var(--moss); font-size: 12px; }
+    footer { display: flex; justify-content: space-between; gap: 20px; padding: 18px 0 25px; border-top: 1px solid var(--line); color: var(--faint); font: 10px/1.6 var(--font-mono); }
+
+    @keyframes rise { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 760px) {
+      .shell { padding: 0 20px; }
+      header { height: 60px; }
+      .header-meta span:first-child { display: none; }
+      .intro { grid-template-columns: 1fr; gap: 20px; padding: 48px 0 30px; }
+      .edition-note { max-width: 280px; }
+      .toolbar { padding: 12px 0 0; }
+      .search-wrap { order: 2; max-width: none; margin-left: 0; }
+      .filter-button { order: 3; }
+      .progress { order: 4; }
+      .main-grid { grid-template-columns: 1fr; gap: 28px; padding-top: 25px; }
+      aside { position: static; }
+      .route-nav { display: flex; overflow-x: auto; padding-bottom: 6px; }
+      .route-nav a { flex: 0 0 auto; gap: 14px; }
+      .field-tip { display: none; }
+      .level-planner { grid-template-columns: 1fr; gap: 18px; padding: 16px; }
+      .level-brief dl { grid-template-columns: 78px 1fr; }
+      .guide-grid { grid-template-columns: 1fr; }
+      .guide-block { padding: 29px 0; }
+      .guide-block h2 { font-size: 25px; }
+      .guide-table { font-size: 12px; }
+      .guide-table th, .guide-table td { padding: 10px 8px; }
+      .zone { grid-template-columns: 45px minmax(0, 1fr) 32px; gap: 10px; padding: 13px 11px; }
+      .zone-note { display: none; }
+      .zone-title { font-size: 17px; }
+      footer { flex-direction: column; gap: 4px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <header class="shell">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span> Field Notes <span style="color:var(--faint)">/ Forsaken</span></div>
+    <div class="header-meta"><span>FOREVER / LAUNCH EDITION</span><span><i class="live-dot"></i>LEVELING LOG</span></div>
+  </header>
+
+  <main class="shell">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <div class="eyebrow">Undead · Affliction · Levels 1–60</div>
+        <h1 id="page-title">A warlock’s<br>road to <span>sixty.</span></h1>
+        <p class="intro-copy">A launch-ready field guide for your Undead Warlock in WoW Forever: a Horde route, Forever-specific Affliction talents, spell training, gear priorities, macros, and rotations.</p>
+      </div>
+      <div class="edition-note"><strong>LAUNCH CHECK · NOV 5, 2026</strong>Guide checked Oct 29, 2026<br>Forever beta information<br>Recheck after launch tuning</div>
+    </section>
+
+    <section class="toolbar" aria-label="Route controls">
+      <label class="search-wrap"><input id="search" type="search" placeholder="Find a zone or level..." aria-label="Find a zone or level"></label>
+      <button class="filter-button" type="button" id="remaining" aria-pressed="false">Show remaining</button>
+      <div class="progress" aria-live="polite"><span id="progress-label">0 / 0 zones complete</span><div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div><span id="progress-percent">0%</span></div>
+    </section>
+
+    <section class="level-planner" aria-label="Level-by-level planner">
+      <div class="level-control">
+        <label for="level-range">Jump to your character level</label>
+        <output id="level-output" for="level-range level-number">Level 1</output>
+        <input id="level-range" type="range" min="1" max="60" value="1" aria-label="Choose character level">
+        <div class="level-number"><span>Enter level</span><input id="level-number" type="number" min="1" max="60" value="1" aria-label="Enter character level"></div>
+      </div>
+      <div class="level-brief" aria-live="polite">
+        <h2 id="brief-title">Tirisfal Glades · Levels 1–10</h2>
+        <dl><dt>Next talent</dt><dd id="brief-talent"></dd><dt>Train / unlock</dt><dd id="brief-spells"></dd><dt>Gear focus</dt><dd id="brief-gear"></dd><dt>Play this level</dt><dd id="brief-play"></dd></dl>
+      </div>
+    </section>
+
+    <details class="route-dropdown">
+      <summary><span class="route-kicker">Route</span><strong id="route-summary">Tirisfal Glades · Levels 1–10</strong><span class="route-prompt" aria-hidden="true"></span></summary>
+      <div class="main-grid" id="route-container">
+      <aside>
+        <h2 class="side-heading">Undead route</h2>
+        <nav class="route-nav" id="route-nav" aria-label="Level ranges"></nav>
+        <div class="field-tip"><h3>Warlock field advice</h3><p>Train your spells and your demon’s Grimoires separately. Pick up the level-10 Voidwalker quest from Undercity if convenient; Method notes this route is easier than Orgrimmar’s.</p></div>
+      </aside>
+      <section aria-labelledby="route-title">
+        <div class="route-heading"><h2 id="route-title">Your route</h2><p>HORDE / UNDEAD WARLOCK</p></div>
+        <div class="zone-list" id="zone-list"></div>
+        <div class="empty" id="empty-state">No zones match that search.</div>
+      </section>
+      </div>
+    </details>
+
+  </main>
+
+  <section class="shell guide" aria-label="Undead Warlock guide">
+    <div class="guide-nav" role="tablist" aria-label="Undead Warlock guide sections">
+      <button id="tab-talents" type="button" role="tab" aria-selected="true" aria-controls="panel-talents" tabindex="0">Talents</button>
+      <button id="tab-spells" type="button" role="tab" aria-selected="false" aria-controls="panel-spells" tabindex="-1">Skills & pets</button>
+      <button id="tab-gear" type="button" role="tab" aria-selected="false" aria-controls="panel-gear" tabindex="-1">Gear</button>
+      <button id="tab-macros" type="button" role="tab" aria-selected="false" aria-controls="panel-macros" tabindex="-1">Macros</button>
+      <button id="tab-rotation" type="button" role="tab" aria-selected="false" aria-controls="panel-rotation" tabindex="-1">Rotation</button>
+      <button id="tab-sources" type="button" role="tab" aria-selected="false" aria-controls="panel-sources" tabindex="-1">Sources</button>
+    </div>
+
+    <section class="guide-block" id="panel-talents" role="tabpanel" tabindex="0" aria-labelledby="tab-talents">
+      <div class="section-kicker">Recommended leveling build</div>
+      <h2 id="talents-title">Affliction first</h2>
+      <p class="guide-lead">Current WoW Forever guides recommend Affliction for efficient leveling: instant DoTs, drain-based sustain, and strong multi-target pressure. This is not the old Era build; Forever changes talents such as Suppression, Improved Corruption, Pandemic, and Wrack.</p>
+      <table class="guide-table">
+        <thead><tr><th>Level</th><th>Talent checkpoint</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr><td>10–13</td><td>4/5 Suppression</td><td>Four points add 4% spell hit, helping spells land on same-level enemies.</td></tr>
+          <tr><td>14–18</td><td>5/5 Improved Corruption</td><td>Corruption becomes instant at level 18 and gains damage, so you can cast while moving.</td></tr>
+          <tr><td>25–26</td><td>2/2 Nightfall</td><td>Corruption and drains can proc instant Shadow Bolts. Spend procs on durable targets.</td></tr>
+          <tr><td>30</td><td>Siphon Life</td><td>Adds an instant DoT that heals; use it on targets that live long enough to repay its mana cost.</td></tr>
+          <tr><td>41</td><td>Demonic Sacrifice (11-point Demonology dip)</td><td>Current leveling guide uses the Felhunter sacrifice for powerful solo health regeneration.</td></tr>
+          <tr><td>51</td><td>Wrack</td><td>Channel after applying Shadow DoTs; it boosts those DoTs on the target while dealing damage.</td></tr>
+          <tr><td>60</td><td>40 Affliction / 11 Demonology</td><td>Use the current calculator for the exact point-by-point path; tuning may change before launch.</td></tr>
+        </tbody>
+      </table>
+      <p class="notice">At 41, the recommended leveling setup temporarily sacrifices your demon. Summoning a pet removes Demonic Sacrifice, so choose pet utility when needed, then sacrifice again afterward. Use the live calculator for intermediate points.</p>
+      <div class="sources"><a href="https://www.icy-veins.com/wow-forever/affliction-warlock-leveling" target="_blank" rel="noreferrer">Icy Veins leveling talents</a><a href="https://www.icy-veins.com/wow-forever/warlock-talent-calculator#tc-111122222366300bb999djjjjjllnnnqaaaafffffgaeee55577" target="_blank" rel="noreferrer">Talent calculator build</a></div>
+    </section>
+
+    <section class="guide-block" id="panel-spells" role="tabpanel" tabindex="0" aria-labelledby="tab-spells" hidden>
+      <div class="section-kicker">Spell ranks · class quests · demon training</div>
+      <h2 id="spells-title">Keep your kit current</h2>
+      <p class="guide-lead">Visit the Warlock trainer for spell ranks. Visit a Demon Trainer for Grimoires, and have the matching demon summoned when you teach its abilities. These are separate training tracks.</p>
+      <table class="guide-table">
+        <thead><tr><th>Level</th><th>Train or unlock</th><th>Field note</th></tr></thead>
+        <tbody>
+          <tr><td>1–4</td><td>Demon Skin, Shadow Bolt, Immolate, Imp quest, Corruption; Blood Pact Grimoire</td><td>Get the Imp quest done early and keep the pet active.</td></tr>
+          <tr><td>6–10</td><td>Life Tap (6), Bane of Agony and Fear (8), Drain Soul and Healthstone; Voidwalker quest (10)</td><td>Do the Voidwalker quest from Undercity if convenient; use Drain Soul to build shards.</td></tr>
+          <tr><td>14–20</td><td>Drain Life (14), Demon Armor, Rain of Fire, Ritual of Summoning; Succubus/Incubus quest</td><td>Upgrade Demon Skin to Demon Armor at 20. Rain of Fire suits grouped dungeon packs.</td></tr>
+          <tr><td>30</td><td>Siphon Life talent; Felhunter class quest; Hellfire</td><td>Felhunter brings Devour Magic. Hellfire damages you; treat it as a risky AoE tool.</td></tr>
+          <tr><td>36</td><td>Felhunter Spell Lock Grimoire; Spellstone</td><td>Keep Spell Lock manual, not autocast, to interrupt the cast you choose.</td></tr>
+          <tr><td>41 / 51</td><td>Demonic Sacrifice talent / Wrack talent</td><td>Felhunter sacrifice is the solo sustain choice in current guidance; Wrack amplifies active Shadow DoTs.</td></tr>
+        </tbody>
+      </table>
+      <div class="guide-grid" style="margin-top:16px">
+        <article class="guide-item"><h3>Choose your demon</h3><p><strong>Voidwalker:</strong> safest solo pulls; let it establish threat. <strong>Succubus/Incubus:</strong> damage and Humanoid control. <strong>Felhunter:</strong> dispel and interrupt. <strong>Imp:</strong> ranged damage and Blood Pact for groups.</p></article>
+        <article class="guide-item"><h3>Undead racial package</h3><p>Touch of the Grave adds passive damage and healing. Cannibalize restores health and, in Forever, mana from a nearby eligible Humanoid or Undead corpse. Will of the Forsaken is a situational fear/charm/sleep break, not a damage button.</p></article>
+      </div>
+    </section>
+
+    <section class="guide-block" id="panel-gear" role="tabpanel" tabindex="0" aria-labelledby="tab-gear" hidden>
+      <div class="section-kicker">Gear · professions · inventory</div>
+      <h2 id="gear-title">Gear for less downtime</h2>
+      <p class="guide-lead">A wand is the first major quality-of-life upgrade: it finishes targets without draining mana. For Affliction, prioritize Shadow Spell Power and general Spell Power, then useful sustain and survivability.</p>
+      <div class="guide-grid">
+        <article class="guide-item"><h3>Stat priorities</h3><ul><li>Spell Power / Shadow damage for DoTs, drains, and Shadow Bolt.</li><li>Spell hit is useful, but 4/5 Suppression already supplies 4% by level 13.</li><li>Critical Strike improves as Pandemic and Malevolence enter the build.</li><li>Spirit improves Life Tap returns; Intellect and Stamina smooth mana and health pools.</li></ul></article>
+        <article class="guide-item"><h3>Upgrade checklist</h3><ul><li>Buy or craft the best affordable wand early; keep upgrading it.</li><li>Compare actual spell stats, not armor rating or item level alone.</li><li>Keep a Healthstone, food, water, bandages, and bag space for Soul Shards.</li><li>Tailoring plus Enchanting is a strong self-sufficiency pair; current guides call out crafted class gear and early wands.</li></ul></article>
+      </div>
+      <p class="notice">Exact best leveling drops are still incomplete in pre-launch references, especially beyond level 35. Treat named loot lists as suggestions, not guaranteed Forever drops; the level-appropriate quest reward or crafted upgrade is usually the practical choice.</p>
+    </section>
+
+    <section class="guide-block" id="panel-macros" role="tabpanel" tabindex="0" aria-labelledby="tab-macros" hidden>
+      <div class="section-kicker">Paste into the in-game macro window</div>
+      <h2 id="macros-title">Useful macros</h2>
+      <p class="guide-lead">Create one macro per box. Test after launch; custom client behavior or localized spell names may require adjustment.</p>
+      <div class="macro-list">
+        <article class="macro"><div class="macro-head"><div><strong>Pet attack + Corruption</strong><br><span>Starts your pet and applies your main instant DoT.</span></div><button class="copy-button" type="button" data-copy="macro-pet-dot">Copy</button></div><pre><code id="macro-pet-dot">#showtooltip Corruption
+    /petattack
+    /cast Corruption</code></pre></article>
+        <article class="macro"><div class="macro-head"><div><strong>Pet control</strong><br><span>Attack normally; hold Shift to call your demon back.</span></div><button class="copy-button" type="button" data-copy="macro-pet-control">Copy</button></div><pre><code id="macro-pet-control">#showtooltip
+/petattack [nomod]
+/petfollow [mod:shift]</code></pre></article>
+        <article class="macro"><div class="macro-head"><div><strong>Emergency Fear</strong><br><span>Stops pet attacks before you fear a target.</span></div><button class="copy-button" type="button" data-copy="macro-fear">Copy</button></div><pre><code id="macro-fear">#showtooltip Fear
+/petpassive
+/petfollow
+/stopcasting
+/cast Fear</code></pre></article>
+        <article class="macro"><div class="macro-head"><div><strong>Use Healthstone</strong><br><span>Replace the item name if your stone has a different rank/name.</span></div><button class="copy-button" type="button" data-copy="macro-stone">Copy</button></div><pre><code id="macro-stone">#showtooltip Healthstone
+/use Healthstone</code></pre></article>
+      </div>
+      <p class="notice">Do not macro every damage spell into a cast sequence. The global cooldown and server macro rules mean a sequence will not play a full rotation automatically. Keep Fear, pet control, Healthstone, Cannibalize, and Spell Lock deliberate.</p>
+    </section>
+
+    <section class="guide-block" id="panel-rotation" role="tabpanel" tabindex="0" aria-labelledby="tab-rotation" hidden>
+      <div class="section-kicker">Solo questing · multi-target · dungeons</div>
+      <h2 id="rotation-title">Rotation by situation</h2>
+      <div class="guide-grid">
+        <article class="guide-item"><h3>Early levels, before the wand</h3><p>Keep Demon Skin up. Open with Immolate; add Corruption once learned, then use a modest Shadow Bolt or wand/auto attack to finish. Shadow Bolt is expensive early, so avoid repeatedly hard-casting if the target is already dying.</p></article>
+        <article class="guide-item"><h3>One durable target</h3><p>Send the pet first. Apply Immolate if it will tick, then Corruption and Bane of Agony. Add Siphon Life from 30 only if the mob will live long enough. Wand while DoTs tick; use Drain Life when health is low and instant Shadow Bolt on Nightfall procs.</p></article>
+        <article class="guide-item"><h3>Multiple quest mobs</h3><p>Let the Voidwalker build threat, then spread Corruption and Bane of Agony across enemies that will survive long enough. Keep moving between instant DoTs. Drain Life to recover; use Nightfall procs on the healthiest target.</p></article>
+        <article class="guide-item"><h3>Resource loop & boss fights</h3><p>Use Life Tap when you have safe health headroom, then recover with Drain Life, Cannibalize, food, or bandages. Drain Soul when you need shards. On elites and bosses, maintain long DoTs, use an appropriate utility Curse alongside Bane of Agony, and channel Wrack after your Shadow DoTs are active.</p></article>
+        <article class="guide-item"><h3>At level 41 and beyond</h3><p>For solo farming, current guidance favors sacrificing the Felhunter for its health regeneration. If an encounter needs an interrupt, dispel, crowd control, or pet tank, summon the useful demon instead; that removes the sacrifice buff until reapplied.</p></article>
+        <article class="guide-item"><h3>Dungeon etiquette</h3><p>Turn off Voidwalker Torment when a tank is holding threat. Keep pet attacks controlled, use Spell Lock on dangerous casts, and bring Healthstones and Soul Shards. Use Rain of Fire on grouped packs; Hellfire is close-range and costs your own health.</p></article>
+      </div>
+    </section>
+
+    <section class="guide-block" id="panel-sources" role="tabpanel" tabindex="0" aria-labelledby="tab-sources" hidden>
+      <div class="section-kicker">Read before launch day</div>
+      <h2 id="sources-title">Forever references</h2>
+      <p class="guide-lead">This page was checked October 29, 2026, before the November 5 launch. Current material is partly beta-based; class tuning, loot tables, and zone progression may change. Recheck these after launch.</p>
+      <div class="sources">
+        <a href="https://www.method.gg/wow-forever/wow-forever-warlock-leveling-guide-and-talents" target="_blank" rel="noreferrer">Method: Forever Warlock leveling</a>
+        <a href="https://www.icy-veins.com/wow-forever/affliction-warlock-leveling" target="_blank" rel="noreferrer">Icy Veins: Affliction leveling</a>
+        <a href="https://www.icy-veins.com/wow-forever/warlock-class-overview" target="_blank" rel="noreferrer">Icy Veins: Forever Warlock changes</a>
+        <a href="https://wowforevertalents.com/warlock" target="_blank" rel="noreferrer">WoW Forever talent calculator</a>
+      </div>
+    </section>
+  </section>
+  <footer class="shell"><span>FIELD NOTES · FORSAKEN WARLOCK</span><span>Progress is saved in this browser.</span></footer>
+
+  <script>
+    const route = [
+      { min: 1, max: 9, range: '1–10', zone: 'Tirisfal Glades', detail: 'Deathknell · Brill · Undercity', note: 'Imp quest early; Voidwalker at 10' },
+      { min: 10, max: 19, range: '10–20', zone: 'Silverpine Forest', detail: 'Forsaken quest hubs · Shadowfang Keep group option', note: 'Train ranks in Undercity' },
+      { min: 20, max: 29, range: '20–30', zone: 'Hillsbrad & Stonetalon', detail: 'Hillsbrad Foothills · Sunrock Retreat', note: 'Mix zones to match quests' },
+      { min: 30, max: 39, range: '30–40', zone: 'Stranglethorn & Desolace', detail: 'Grom’gol hub · Shadowprey Village', note: 'PvP risk in Stranglethorn' },
+      { min: 40, max: 49, range: '40–50', zone: 'Tanaris & Feralas', detail: 'Gadgetzan · Camp Mojache', note: 'Maraudon group option' },
+      { min: 50, max: 54, range: '50–55', zone: 'Un’Goro & Felwood', detail: 'Marshal’s Refuge · Emerald Sanctuary', note: 'Gather flight paths' },
+      { min: 55, max: 57, range: '55–58', zone: 'Western Plaguelands', detail: 'The Bulwark · focused quest loops', note: 'Upgrade spell ranks' },
+      { min: 58, max: 60, range: '58–60', zone: 'Eastern Plaguelands & Winterspring', detail: 'Light’s Hope Chapel · Everlook', note: 'Choose quests by availability' }
+    ];
+    const zoneList = document.querySelector('#zone-list');
+    const routeNav = document.querySelector('#route-nav');
+    const search = document.querySelector('#search');
+    const remainingButton = document.querySelector('#remaining');
+    let remainingOnly = false;
+    let currentLevel = 1;
+
+    function storageKey() { return 'field-notes-wow-undead-warlock'; }
+    function getCompleted() {
+      try { return JSON.parse(localStorage.getItem(storageKey()) || '[]'); }
+      catch { return []; }
+    }
+    function saveCompleted(completed) { localStorage.setItem(storageKey(), JSON.stringify(completed)); }
+
+    function render() {
+      const completed = getCompleted();
+      const query = search.value.trim().toLowerCase();
+      const visibleZones = route.map((item, index) => ({ ...item, index }))
+        .filter(item => (!remainingOnly || !completed.includes(item.index)) &&
+          `${item.range} ${item.zone} ${item.detail} ${item.note}`.toLowerCase().includes(query));
+
+      zoneList.innerHTML = visibleZones.map((item, order) => `
+        <article class="zone ${completed.includes(item.index) ? 'completed' : ''} ${item.index === route.findIndex(zone => currentLevel >= zone.min && currentLevel <= zone.max) ? 'current' : ''}" id="zone-${item.index}" style="animation-delay:${order * 35}ms">
+          <div class="level">LV ${item.range}</div>
+          <div><h3 class="zone-title">${item.zone}</h3><p class="zone-meta">${item.detail}</p></div>
+          <div class="zone-note">${item.note}</div>
+          <button type="button" class="check" data-index="${item.index}" aria-label="Mark ${item.zone} ${completed.includes(item.index) ? 'incomplete' : 'complete'}" aria-pressed="${completed.includes(item.index)}">${completed.includes(item.index) ? '✓' : ''}</button>
+        </article>`).join('');
+
+      document.querySelector('#empty-state').style.display = visibleZones.length ? 'none' : 'block';
+      document.querySelector('#progress-label').textContent = `${completed.length} / ${route.length} zones complete`;
+      const percent = Math.round(completed.length / route.length * 100);
+      document.querySelector('#progress-percent').textContent = `${percent}%`;
+      document.querySelector('#progress-fill').style.width = `${percent}%`;
+
+      routeNav.innerHTML = route.map((item, index) => `<a href="#zone-${index}" class="${completed.includes(index) ? 'active' : ''}"><span>${item.zone}</span><small>${item.range}</small></a>`).join('');
+      zoneList.querySelectorAll('.check').forEach(button => button.addEventListener('click', () => {
+        const index = Number(button.dataset.index);
+        const next = getCompleted();
+        saveCompleted(next.includes(index) ? next.filter(item => item !== index) : [...next, index]);
+        render();
+      }));
+    }
+
+    search.addEventListener('input', render);
+    remainingButton.addEventListener('click', () => {
+      remainingOnly = !remainingOnly;
+      remainingButton.setAttribute('aria-pressed', String(remainingOnly));
+      render();
+    });
+    const levelRange = document.querySelector('#level-range');
+    const levelNumber = document.querySelector('#level-number');
+    const milestones = [
+      { level: 1, spells: 'Complete the Imp class quest; train Demon Skin, Immolate, and Shadow Bolt.', play: 'Keep Demon Skin up. Open with Immolate; Shadow Bolt is costly, so finish with wand/auto attacks when possible.' },
+      { level: 4, spells: 'Train Corruption; buy the Imp’s Blood Pact Grimoire.', play: 'Apply Corruption to targets that will live for its ticks.' },
+      { level: 6, spells: 'Train Life Tap and the next Shadow Bolt rank.', play: 'Use Life Tap between pulls, then eat to refill health and mana.' },
+      { level: 8, spells: 'Train Bane of Agony and Fear.', play: 'Bane of Agony is a strong pull/tag; do not refresh early because its later ticks hit harder.' },
+      { level: 10, spells: 'Unlock Drain Soul, Healthstone, and Voidwalker. Start the level-10 class quest from Undercity.', play: 'Let Voidwalker establish threat before applying DoTs.' },
+      { level: 14, spells: 'Train Drain Life and the next Corruption rank.', play: 'Drain Life when you need health; otherwise preserve mana with your wand.' },
+      { level: 18, spells: 'Improved Corruption should make Corruption instant.', play: 'Move between targets while spreading Corruption.' },
+      { level: 20, spells: 'Train Demon Armor, Ritual of Summoning, Rain of Fire; take Succubus/Incubus quest.', play: 'Use a Voidwalker for safety or Succubus/Incubus for faster damage.' },
+      { level: 25, spells: 'Nightfall can now proc instant Shadow Bolt.', play: 'Spend procs on healthy targets, not a mob already dying to DoTs.' },
+      { level: 28, spells: 'Create Firestone becomes available; keep pet Grimoires current.', play: 'Get Spellstone at 36; current Affliction guidance prefers its Shadow damage and haste.' },
+      { level: 30, spells: 'Learn Siphon Life talent and complete the Felhunter class quest.', play: 'Use Siphon Life on longer fights; Felhunter adds dispel utility.' },
+      { level: 36, spells: 'Train Spell Lock from the Felhunter Grimoire; Spellstone is available.', play: 'Use Spell Lock manually to interrupt dangerous casts.' },
+      { level: 41, spells: 'Reach Demonic Sacrifice in the current leveling talent path.', play: 'Felhunter sacrifice is the recommended solo sustain option; summoning a demon removes the buff.' },
+      { level: 51, spells: 'Unlock Wrack in the Affliction tree.', play: 'Apply Shadow DoTs first, then channel Wrack on a durable enemy.' }
+    ];
+    function updateLevel(value) {
+      const level = Math.max(1, Math.min(60, Number(value) || 1));
+      currentLevel = level;
+      levelRange.value = level;
+      levelNumber.value = level;
+      document.querySelector('#level-output').textContent = `Level ${level}`;
+      const zone = route.find(item => level >= item.min && level <= item.max) || route[route.length - 1];
+      const currentMilestone = [...milestones].reverse().find(item => item.level <= level) || milestones[0];
+      let talentText;
+      if (level < 10) talentText = 'At level 10, begin Suppression; spend four points by level 13 for 4% spell hit.';
+      else if (level <= 13) talentText = `Suppression ${level - 9}/5 — continue through level 13 for 4% spell hit.`;
+      else if (level <= 18) talentText = `Improved Corruption ${level - 13}/5 — finish at 18 for instant Corruption.`;
+      else if (level < 25) talentText = 'Follow the Affliction prerequisites toward 2/2 Nightfall at levels 25–26.';
+      else if (level <= 26) talentText = `Nightfall ${level - 24}/2 — unlock instant Shadow Bolt procs.`;
+      else if (level < 30) talentText = 'Continue the Affliction path toward Siphon Life at level 30.';
+      else if (level === 30) talentText = 'Take Siphon Life for another DoT and healing.';
+      else if (level <= 40) talentText = `Continue the 11-point Demonology dip toward Demonic Sacrifice at 41 (${level - 30}/11 points).`;
+      else if (level === 41) talentText = 'Take Demonic Sacrifice after the 11-point Demonology dip.';
+      else if (level < 51) talentText = 'Return to Affliction and follow the calculator path toward Wrack at 51.';
+      else talentText = 'Take Wrack at 51, then follow the calculator to complete the 40/11 leveling build.';
+      document.querySelector('#brief-title').textContent = `${zone.zone} · Levels ${zone.range}`;
+      document.querySelector('#route-summary').textContent = `${zone.zone} · Levels ${zone.range}`;
+      document.querySelector('#brief-talent').textContent = talentText;
+      document.querySelector('#brief-spells').textContent = currentMilestone.spells;
+      document.querySelector('#brief-gear').textContent = level < 10 ? 'Get a wand as early as you can; favor Spell Power, Shadow damage, Stamina, and Spirit.' : level < 28 ? 'Upgrade your wand; prioritize Spell/Shadow Power, then Spirit and Stamina. Save Soul Shard bag space.' : level < 36 ? 'Create Firestone at 28; upgrade to Spellstone at 36. Keep prioritizing Shadow/Spell Power and sustain.' : 'Use Spellstone and seek Spell/Shadow Power; Spirit supports Life Tap. Gear after 35 is still being documented.';
+      document.querySelector('#brief-play').textContent = currentMilestone.play;
+      render();
+    }
+    levelRange.addEventListener('input', () => updateLevel(levelRange.value));
+    levelNumber.addEventListener('input', () => updateLevel(levelNumber.value));
+    document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', async () => {
+      const code = document.querySelector(`#${button.dataset.copy}`).textContent;
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = 'Copied';
+      } catch {
+        button.textContent = 'Select text';
+      }
+      setTimeout(() => { button.textContent = 'Copy'; }, 1400);
+    }));
+    const guideTabs = [...document.querySelectorAll('[role="tab"]')];
+    function selectGuideTab(tab) {
+      guideTabs.forEach(item => {
+        const selected = item === tab;
+        item.setAttribute('aria-selected', String(selected));
+        item.tabIndex = selected ? 0 : -1;
+        document.querySelector(`#${item.getAttribute('aria-controls')}`).hidden = !selected;
+      });
+    }
+    guideTabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => selectGuideTab(tab));
+      tab.addEventListener('keydown', event => {
+        let nextIndex;
+        if (event.key === 'ArrowRight') nextIndex = (index + 1) % guideTabs.length;
+        else if (event.key === 'ArrowLeft') nextIndex = (index - 1 + guideTabs.length) % guideTabs.length;
+        else if (event.key === 'Home') nextIndex = 0;
+        else if (event.key === 'End') nextIndex = guideTabs.length - 1;
+        else return;
+        event.preventDefault();
+        selectGuideTab(guideTabs[nextIndex]);
+        guideTabs[nextIndex].focus();
+      });
+    });
+    render();
+    updateLevel(1);
+  </script>
+</body>
+</html>
