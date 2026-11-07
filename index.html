@@ -1,562 +1,1133 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="sv" class="dark">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101629">
-  <title>Undead Warlock Field Guide — WoW Forever</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Spectral:wght@400;500;600;700&display=swap');
-
-    :root {
-      color-scheme: dark;
-      --ink: #f2f4ff;
-      --muted: #b2bdd8;
-      --faint: #818eae;
-      --night: #101629;
-      --panel: #1b2540;
-      --line: #35415f;
-      --moss: #aa96ff;
-      --moss-dark: #6474a5;
-      --rust: #79b5f5;
-      --gold: #91c8ff;
-      --green: #49c99a;
-      --font-display: 'Spectral', Georgia, serif;
-      --font-mono: 'DM Mono', monospace;
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      min-width: 320px;
-      color: var(--ink);
-      background: var(--night);
-      font-family: var(--font-display);
-      background-image: linear-gradient(90deg, transparent 49.95%, #b8a8ff08 50%, transparent 50.05%), radial-gradient(ellipse at 78% -18%, #6953c333 0, transparent 45%), linear-gradient(135deg, #101629, #151d35 62%, #11192e);
-    }
-    button, input { font: inherit; }
-    button { color: inherit; }
-    .shell { max-width: 1180px; margin: 0 auto; padding: 0 42px; }
-
-    header {
-      height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--line);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: .06em;
-      color: var(--muted);
-    }
-    .brand { display: flex; align-items: center; gap: 12px; color: var(--ink); text-transform: uppercase; }
-    .brand-mark { width: 25px; height: 25px; display: grid; place-items: center; border: 1px solid var(--moss-dark); color: var(--moss); font-size: 16px; }
-    .header-meta { display: flex; align-items: center; gap: 24px; }
-    .live-dot { display: inline-block; width: 6px; height: 6px; margin-right: 7px; border-radius: 50%; background: var(--green); vertical-align: 1px; }
-
-    .intro { padding: 69px 0 40px; display: grid; grid-template-columns: minmax(0, 1fr) 230px; gap: 36px; align-items: end; animation: rise .6s ease both; }
-    .eyebrow, .section-kicker { color: var(--moss); font: 11px var(--font-mono); letter-spacing: .11em; text-transform: uppercase; }
-    h1 { margin: 13px 0 11px; font-size: clamp(42px, 6vw, 72px); font-weight: 500; line-height: .98; letter-spacing: 0; }
-    h1 span { color: var(--moss); font-style: italic; }
-    .intro-copy { max-width: 590px; margin: 0; color: #c1cae0; font-size: 17px; line-height: 1.65; }
-    .edition-note { border-left: 1px solid var(--moss-dark); padding: 4px 0 4px 16px; color: var(--muted); font: 11px/1.8 var(--font-mono); }
-    .edition-note strong { display: block; color: var(--gold); font-weight: 400; }
-
-    .toolbar { min-height: 69px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-    .faction-tabs { display: inline-flex; gap: 3px; padding: 4px; background: #0b1122; }
-    .faction-tabs button, .filter-button {
-      min-height: 35px;
-      padding: 0 14px;
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--muted);
-      cursor: pointer;
-      font: 11px var(--font-mono);
-      letter-spacing: .04em;
-    }
-    .faction-tabs button[aria-pressed="true"] { color: var(--ink); border-color: var(--line); background: var(--panel); }
-    .search-wrap { position: relative; flex: 1 1 190px; max-width: 320px; margin-left: auto; }
-    .search-wrap::before { content: '⌕'; position: absolute; left: 12px; top: 5px; color: var(--faint); font-size: 20px; }
-    #search { width: 100%; height: 37px; padding: 0 12px 0 34px; border: 1px solid var(--line); outline: none; background: #0e162a; color: var(--ink); font: 11px var(--font-mono); }
-    #search:focus { border-color: var(--moss-dark); }
-    #search::placeholder { color: var(--faint); }
-    .filter-button { border-color: var(--line); white-space: nowrap; }
-    .filter-button:hover, .filter-button[aria-pressed="true"] { color: var(--moss); border-color: var(--moss-dark); }
-    .progress { flex-basis: 100%; display: flex; gap: 12px; align-items: center; padding: 0 0 13px; color: var(--muted); font: 10px var(--font-mono); }
-    .progress-track { height: 3px; flex: 1; background: #35415f; }
-    .progress-fill { width: 0; height: 100%; background: var(--green); transition: width .25s ease; }
-
-    .main-grid { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 46px; padding: 39px 0 80px; }
-    .route-dropdown { margin: 28px 0 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-    .route-dropdown > summary { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 56px; padding: 8px 4px; cursor: pointer; list-style: none; }
-    .route-dropdown > summary::-webkit-details-marker { display: none; }
-    .route-dropdown > summary::before { content: '+'; width: 23px; height: 23px; display: grid; place-items: center; border: 1px solid var(--moss-dark); color: var(--moss); font: 16px var(--font-mono); }
-    .route-dropdown[open] > summary::before { content: '−'; }
-    .route-dropdown > summary .route-kicker { color: var(--moss); font: 10px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
-    .route-dropdown > summary strong { color: var(--ink); font-size: 15px; font-weight: 500; }
-    .route-dropdown > summary .route-prompt { margin-left: auto; color: var(--muted); font: 10px var(--font-mono); }
-    .route-dropdown[open] > summary .route-prompt::after { content: 'Collapse'; }
-    .route-dropdown:not([open]) > summary .route-prompt::after { content: 'Expand'; }
-    .route-dropdown .main-grid { padding-top: 14px; }
-    aside { align-self: start; position: sticky; top: 20px; }
-    .side-heading { margin: 0 0 14px; color: var(--faint); font: 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
-    .route-nav { display: grid; gap: 3px; }
-    .route-nav a { display: flex; justify-content: space-between; padding: 9px 10px; color: var(--muted); text-decoration: none; border-left: 1px solid var(--line); font-size: 14px; transition: .15s ease; }
-    .route-nav a:hover, .route-nav a.active { color: var(--ink); border-left-color: var(--moss); background: #aa96ff12; }
-    .route-nav small { color: var(--faint); font: 10px var(--font-mono); }
-    .field-tip { margin-top: 34px; padding: 15px 14px; border: 1px solid var(--line); background: #ffffff07; }
-    .field-tip h3 { margin: 0 0 8px; color: var(--green); font: 500 15px var(--font-display); }
-    .field-tip p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
-
-    .route-heading { margin: 0 0 14px; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-    .route-heading h2 { margin: 0; font-size: 22px; font-weight: 500; }
-    .route-heading p { margin: 0; color: var(--muted); font: 10px var(--font-mono); }
-    .zone-list { display: grid; gap: 8px; }
-    .zone {
-      display: grid;
-      grid-template-columns: 56px minmax(0, 1fr) 120px 32px;
-      align-items: center;
-      gap: 15px;
-      min-height: 95px;
-      padding: 14px 16px;
-      border: 1px solid var(--line);
-      background: linear-gradient(105deg, #202b49, #18223b 68%);
-      transition: border-color .2s, opacity .2s, transform .2s;
-      animation: rise .35s ease both;
-    }
-    .zone:hover { border-color: #59614f; transform: translateX(2px); }
-    .zone.current { border-color: var(--moss-dark); }
-    .zone.completed { opacity: .62; }
-    .zone.completed .zone-title { text-decoration: line-through; text-decoration-color: var(--green); }
-    .level { color: var(--moss); font: 11px var(--font-mono); }
-    .zone-title { margin: 0 0 3px; font-size: 19px; font-weight: 500; }
-    .zone-meta { margin: 0; color: var(--muted); font: 10px/1.5 var(--font-mono); }
-    .zone-note { color: #b3c9f2; font-size: 12px; line-height: 1.35; }
-    .check { width: 28px; height: 28px; border: 1px solid #596a93; background: transparent; color: var(--green); cursor: pointer; font-size: 16px; }
-    .check:hover { background: #23876e12; border-color: var(--green); }
-    .empty { display: none; padding: 32px; border: 1px dashed var(--line); color: var(--muted); text-align: center; font: 12px var(--font-mono); }
-    .level-planner { display: grid; grid-template-columns: minmax(210px, .7fr) 1.3fr; gap: 28px; margin: 26px 0 0; padding: 22px; border: 1px solid var(--line); background: linear-gradient(110deg, #202b49, #171f38 70%); }
-    .level-control { display: grid; align-content: start; gap: 12px; }
-    .level-control label { color: var(--moss); font: 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
-    .level-control output { color: var(--ink); font: 500 34px var(--font-display); }
-    .level-control input[type="range"] { width: 100%; accent-color: var(--moss); cursor: pointer; }
-    .level-control input[type="number"] { width: 74px; height: 36px; border: 1px solid var(--line); background: #0e162a; color: var(--ink); padding: 0 9px; font: 12px var(--font-mono); }
-    .level-number { display: flex; align-items: center; gap: 10px; color: var(--muted); font: 10px var(--font-mono); }
-    .level-brief h2 { margin: 0 0 12px; font-size: 22px; font-weight: 500; }
-    .level-brief dl { display: grid; grid-template-columns: 90px 1fr; gap: 9px 14px; margin: 0; font-size: 13px; }
-    .level-brief dt { color: var(--gold); font: 10px var(--font-mono); text-transform: uppercase; }
-    .level-brief dd { margin: 0; color: #d0d8ec; line-height: 1.45; }
-    .guide { padding: 36px 0 68px; }
-    .guide-nav { display: flex; overflow-x: auto; gap: 4px; padding: 15px 0 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-    .guide-nav button { flex: 0 0 auto; min-height: 40px; padding: 0 15px; border: 1px solid transparent; border-bottom: 0; background: transparent; color: var(--muted); cursor: pointer; font: 10px var(--font-mono); }
-    .guide-nav button[aria-selected="true"] { border-color: var(--line); background: var(--panel); color: var(--moss); }
-    .guide-nav button:hover { color: var(--ink); }
-    .guide-block { padding: 36px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 20px; }
-    .guide-block:last-child { border-bottom: 0; }
-    .guide-block h2 { margin: 8px 0 10px; font-size: 29px; font-weight: 500; }
-    .guide-block h3 { margin: 0 0 7px; color: var(--gold); font-size: 18px; font-weight: 500; }
-    .guide-lead { max-width: 760px; margin: 0 0 22px; color: #b7b7aa; font-size: 15px; line-height: 1.65; }
-    .guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-    .guide-item { padding: 16px 17px; border: 1px solid var(--line); background: #ffffff07; }
-    .guide-item p, .guide-item li { color: var(--muted); font-size: 13px; line-height: 1.55; }
-    .guide-item p { margin: 0; }
-    .guide-item ul { margin: 8px 0 0; padding-left: 18px; }
-    .guide-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .guide-table th, .guide-table td { padding: 12px 13px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-    .guide-table th { color: var(--moss); font: 10px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
-    .guide-table td:first-child { width: 100px; color: var(--gold); font-family: var(--font-mono); white-space: nowrap; }
-    .guide-table td { color: #d0d8ec; line-height: 1.5; }
-    .notice { margin: 18px 0 0; padding: 13px 15px; border-left: 2px solid var(--green); background: #49c99a14; color: #bcebd9; font-size: 13px; line-height: 1.55; }
-    .macro-list { display: grid; gap: 12px; }
-    .setup-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 0 0 20px; padding: 0; list-style: none; counter-reset: setup; }
-    .setup-steps li { min-height: 100px; padding: 12px; border: 1px solid var(--line); background: #ffffff0a; color: var(--muted); font-size: 12px; line-height: 1.5; counter-increment: setup; }
-    .setup-steps li::before { content: '0' counter(setup); display: block; margin-bottom: 8px; color: var(--moss); font: 11px var(--font-mono); }
-    .macro { border: 1px solid var(--line); background: #0d1427; }
-    .macro-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 10px 13px; border-bottom: 1px solid var(--line); }
-    .macro-head strong { color: var(--ink); font-size: 14px; font-weight: 500; }
-    .macro-head span { color: var(--faint); font: 10px var(--font-mono); }
-    .macro pre { overflow-x: auto; margin: 0; padding: 13px; color: #b8a7ff; font: 12px/1.65 var(--font-mono); white-space: pre; }
-    .copy-button { min-height: 30px; padding: 0 10px; border: 1px solid var(--line); background: transparent; color: var(--muted); cursor: pointer; font: 10px var(--font-mono); }
-    .copy-button:hover { border-color: var(--moss-dark); color: var(--moss); }
-    .sources { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 20px; }
-    .sources a { color: var(--moss); font-size: 12px; }
-    footer { display: flex; justify-content: space-between; gap: 20px; padding: 18px 0 25px; border-top: 1px solid var(--line); color: var(--faint); font: 10px/1.6 var(--font-mono); }
-
-    @keyframes rise { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
-    @media (max-width: 760px) {
-      .shell { padding: 0 20px; }
-      header { height: 60px; }
-      .header-meta span:first-child { display: none; }
-      .intro { grid-template-columns: 1fr; gap: 20px; padding: 48px 0 30px; }
-      .edition-note { max-width: 280px; }
-      .toolbar { padding: 12px 0 0; }
-      .search-wrap { order: 2; max-width: none; margin-left: 0; }
-      .filter-button { order: 3; }
-      .progress { order: 4; }
-      .main-grid { grid-template-columns: 1fr; gap: 28px; padding-top: 25px; }
-      aside { position: static; }
-      .route-nav { display: flex; overflow-x: auto; padding-bottom: 6px; }
-      .route-nav a { flex: 0 0 auto; gap: 14px; }
-      .field-tip { display: none; }
-      .level-planner { grid-template-columns: 1fr; gap: 18px; padding: 16px; }
-      .level-brief dl { grid-template-columns: 78px 1fr; }
-      .guide-grid { grid-template-columns: 1fr; }
-      .setup-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .guide-block { padding: 29px 0; }
-      .guide-block h2 { font-size: 25px; }
-      .guide-table { font-size: 12px; }
-      .guide-table th, .guide-table td { padding: 10px 8px; }
-      .zone { grid-template-columns: 45px minmax(0, 1fr) 32px; gap: 10px; padding: 13px 11px; }
-      .zone-note { display: none; }
-      .zone-title { font-size: 17px; }
-      footer { flex-direction: column; gap: 4px; }
-    }
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undead Warlock Dynamic Leveling 1-60 | WoW Classic</title>
+    <!-- Tailwind CSS -->
+    <script src="assets/tailwind.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        horde: {
+                            DEFAULT: '#8b0000',
+                            dark: '#4a0000',
+                            light: '#b22222'
+                        },
+                        fel: {
+                            DEFAULT: '#22c55e',
+                            glow: '#4ade80',
+                            dark: '#15803d'
+                        },
+                        shadow: {
+                            DEFAULT: '#9333ea',
+                            dark: '#581c87',
+                            light: '#c084fc'
+                        },
+                        darkbg: '#0a0910',
+                        cardbg: '#13111c',
+                        borderbg: '#262238'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="assets/css/all.min.css">
+    <style>
+        .hidden {
+            display: none !important;
+        }
+        body {
+            font-family: system-ui, sans-serif;
+            background-color: #0a0910;
+            color: #e2e8f0;
+            user-select: none;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0910;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #262238;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9333ea;
+        }
+        .fel-glow {
+            text-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+        }
+        .purple-glow {
+            box-shadow: 0 0 15px rgba(147, 51, 234, 0.25);
+        }
+        .gold-header {
+            color: #f59e0b;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #22c55e;
+            cursor: pointer;
+            box-shadow: 0 0 10px #22c55e;
+            border: 2px solid #ffffff;
+        }
+    </style>
 </head>
-<body>
-  <header class="shell">
-    <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span> Field Notes <span style="color:var(--faint)">/ Forsaken</span></div>
-    <div class="header-meta"><span>FOREVER / LAUNCH EDITION</span><span><i class="live-dot"></i>LEVELING LOG</span></div>
-  </header>
+<body class="min-h-screen flex flex-col bg-darkbg text-slate-200 antialiased selection:bg-purple-900 selection:text-white">
 
-  <main class="shell">
-    <section class="intro" aria-labelledby="page-title">
-      <div>
-        <div class="eyebrow">Undead · Affliction · Levels 1–60</div>
-        <h1 id="page-title">A warlock’s<br>road to <span>sixty.</span></h1>
-        <p class="intro-copy">A launch-ready field guide for your Undead Warlock in WoW Forever: a Horde route, Forever-specific Affliction talents, spell training, gear priorities, macros, and rotations.</p>
-      </div>
-      <div class="edition-note"><strong>LAUNCH CHECK · NOV 5, 2026</strong>Guide checked Oct 29, 2026<br>Forever beta information<br>Recheck after launch tuning</div>
-    </section>
-
-    <section class="toolbar" aria-label="Route controls">
-      <label class="search-wrap"><input id="search" type="search" placeholder="Find a zone or level..." aria-label="Find a zone or level"></label>
-      <button class="filter-button" type="button" id="remaining" aria-pressed="false">Show remaining</button>
-      <div class="progress" aria-live="polite"><span id="progress-label">0 / 0 zones complete</span><div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div><span id="progress-percent">0%</span></div>
-    </section>
-
-    <section class="level-planner" aria-label="Level-by-level planner">
-      <div class="level-control">
-        <label for="level-range">Jump to your character level</label>
-        <output id="level-output" for="level-range level-number">Level 1</output>
-        <input id="level-range" type="range" min="1" max="60" value="1" aria-label="Choose character level">
-        <div class="level-number"><span>Enter level</span><input id="level-number" type="number" min="1" max="60" value="1" aria-label="Enter character level"></div>
-      </div>
-      <div class="level-brief" aria-live="polite">
-        <h2 id="brief-title">Tirisfal Glades · Levels 1–10</h2>
-        <dl><dt>Next talent</dt><dd id="brief-talent"></dd><dt>Train / unlock</dt><dd id="brief-spells"></dd><dt>Gear focus</dt><dd id="brief-gear"></dd><dt>Play this level</dt><dd id="brief-play"></dd></dl>
-      </div>
-    </section>
-
-    <details class="route-dropdown">
-      <summary><span class="route-kicker">Route</span><strong id="route-summary">Tirisfal Glades · Levels 1–10</strong><span class="route-prompt" aria-hidden="true"></span></summary>
-      <div class="main-grid" id="route-container">
-      <aside>
-        <h2 class="side-heading">Undead route</h2>
-        <nav class="route-nav" id="route-nav" aria-label="Level ranges"></nav>
-        <div class="field-tip"><h3>Warlock field advice</h3><p>Train your spells and your demon’s Grimoires separately. Pick up the level-10 Voidwalker quest from Undercity if convenient; Method notes this route is easier than Orgrimmar’s.</p></div>
-      </aside>
-      <section aria-labelledby="route-title">
-        <div class="route-heading"><h2 id="route-title">Your route</h2><p>HORDE / UNDEAD WARLOCK</p></div>
-        <div class="zone-list" id="zone-list"></div>
-        <div class="empty" id="empty-state">No zones match that search.</div>
-      </section>
-      </div>
-    </details>
-
-  </main>
-
-  <section class="shell guide" aria-label="Undead Warlock guide">
-    <div class="guide-nav" role="tablist" aria-label="Undead Warlock guide sections">
-      <button id="tab-talents" type="button" role="tab" aria-selected="true" aria-controls="panel-talents" tabindex="0">Talents</button>
-      <button id="tab-spells" type="button" role="tab" aria-selected="false" aria-controls="panel-spells" tabindex="-1">Skills & pets</button>
-      <button id="tab-gear" type="button" role="tab" aria-selected="false" aria-controls="panel-gear" tabindex="-1">Gear</button>
-      <button id="tab-crafting" type="button" role="tab" aria-selected="false" aria-controls="panel-crafting" tabindex="-1">Crafting gear</button>
-      <button id="tab-macros" type="button" role="tab" aria-selected="false" aria-controls="panel-macros" tabindex="-1">Macros</button>
-      <button id="tab-rotation" type="button" role="tab" aria-selected="false" aria-controls="panel-rotation" tabindex="-1">Rotation</button>
-      <button id="tab-sources" type="button" role="tab" aria-selected="false" aria-controls="panel-sources" tabindex="-1">Sources</button>
+    <!-- Offline Notification Banner -->
+    <div id="offline-banner" class="hidden bg-amber-600 text-white text-xs font-semibold px-4 py-1.5 text-center flex justify-center items-center gap-2" role="status" aria-live="polite">
+        <i class="fa-solid font-bold fa-wifi"></i> Offline: guiden fungerar lokalt och skickar inga karaktärsdata.
     </div>
 
-    <section class="guide-block" id="panel-talents" role="tabpanel" tabindex="0" aria-labelledby="tab-talents">
-      <div class="section-kicker">Recommended leveling build</div>
-      <h2 id="talents-title">Affliction first</h2>
-      <p class="guide-lead">Current WoW Forever guides recommend Affliction for efficient leveling: instant DoTs, drain-based sustain, and strong multi-target pressure. This is not the old Era build; Forever changes talents such as Suppression, Improved Corruption, Pandemic, and Wrack.</p>
-      <table class="guide-table">
-        <thead><tr><th>Level</th><th>Talent checkpoint</th><th>Why it matters</th></tr></thead>
-        <tbody>
-          <tr><td>10–13</td><td>4/5 Suppression</td><td>Four points add 4% spell hit, helping spells land on same-level enemies.</td></tr>
-          <tr><td>14–18</td><td>5/5 Improved Corruption</td><td>Corruption becomes instant at level 18 and gains damage, so you can cast while moving.</td></tr>
-          <tr><td>25–26</td><td>2/2 Nightfall</td><td>Corruption and drains can proc instant Shadow Bolts. Spend procs on durable targets.</td></tr>
-          <tr><td>30</td><td>Siphon Life</td><td>Adds an instant DoT that heals; use it on targets that live long enough to repay its mana cost.</td></tr>
-          <tr><td>41</td><td>Demonic Sacrifice (11-point Demonology dip)</td><td>Current leveling guide uses the Felhunter sacrifice for powerful solo health regeneration.</td></tr>
-          <tr><td>51</td><td>Wrack</td><td>Channel after applying Shadow DoTs; it boosts those DoTs on the target while dealing damage.</td></tr>
-          <tr><td>60</td><td>40 Affliction / 11 Demonology</td><td>Use the current calculator for the exact point-by-point path; tuning may change before launch.</td></tr>
-        </tbody>
-      </table>
-      <p class="notice">At 41, the recommended leveling setup temporarily sacrifices your demon. Summoning a pet removes Demonic Sacrifice, so choose pet utility when needed, then sacrifice again afterward. Use the live calculator for intermediate points.</p>
-      <div class="sources"><a href="https://www.icy-veins.com/wow-forever/affliction-warlock-leveling" target="_blank" rel="noreferrer">Icy Veins leveling talents</a><a href="https://www.icy-veins.com/wow-forever/warlock-talent-calculator#tc-111122222366300bb999djjjjjllnnnqaaaafffffgaeee55577" target="_blank" rel="noreferrer">Talent calculator build</a></div>
+    <!-- Main Navigation Header -->
+    <header class="bg-cardbg border-b border-borderbg sticky top-0 z-40 backdrop-blur-md bg-opacity-95">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                
+                <!-- Logo & Title -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-lg bg-purple-950 border border-purple-600/50 flex items-center justify-center text-purple-400 text-2xl shadow-md">
+                            <i class="fa-solid fa-hand-sparkles"></i>
+                        </div>
+                        <div>
+                            <h1 class="font-extrabold text-lg sm:text-xl text-slate-100 leading-tight flex items-center gap-2">
+                                Undead Warlock <span class="text-xs px-2 py-0.5 rounded bg-horde/40 text-red-300 border border-horde/50">1-60 Guide</span>
+                            </h1>
+                            <p class="text-xs text-slate-400">WoW Classic / Hardcore / Forever • Statisk guide</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Global Search & Meta Scanner Button -->
+                <div class="flex items-center gap-3">
+                    <button onclick="openMetaScanner()" class="bg-gradient-to-r from-amber-600 to-fel hover:from-amber-500 hover:to-fel-glow text-slate-950 font-bold text-xs px-3.5 py-2 rounded-lg border border-amber-400/50 shadow-md transition flex items-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-slate-950"></i> Meta-källor
+                    </button>
+                    <div class="relative flex-1 md:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                        <input type="text" id="global-search" placeholder="Sök spells, wands, quests..." 
+                            class="w-full bg-slate-900/80 border border-borderbg rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-purple-500 transition">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Dynamic Level Control Bar -->
+    <section class="bg-slate-950 border-b border-borderbg py-3 px-4 sm:px-6 lg:px-8 shadow-inner">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-4">
+            
+            <!-- Level Display & Slider -->
+            <div class="flex items-center gap-4 w-full lg:w-2/3">
+                <div class="flex items-center gap-2 bg-cardbg px-3 py-1.5 rounded-lg border border-purple-900/40">
+                    <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Level</span>
+                    <span id="current-level-display" class="text-2xl font-black text-fel fel-glow min-w-[36px] text-center">60</span>
+                </div>
+
+                <div class="flex-1 flex flex-col justify-center">
+                    <input type="range" id="level-slider" min="1" max="60" value="60" 
+                        class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-fel range-slider">
+                    <div class="flex justify-between text-[10px] text-slate-500 mt-1 font-mono">
+                        <span>Lvl 1</span>
+                        <span>Lvl 15</span>
+                        <span>Lvl 30</span>
+                        <span>Lvl 45</span>
+                        <span>Lvl 60</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fast Level Jump Buttons -->
+            <div class="flex items-center gap-1.5 flex-wrap justify-center w-full lg:w-auto">
+                <span class="text-xs text-slate-400 mr-1 hidden sm:inline">Gå till:</span>
+                <button onclick="setLevel(1)" class="lvl-btn px-2.5 py-1 text-xs font-semibold rounded bg-slate-800 hover:bg-purple-900 text-slate-300 border border-slate-700 transition">L1</button>
+                <button onclick="setLevel(10)" class="lvl-btn px-2.5 py-1 text-xs font-semibold rounded bg-slate-800 hover:bg-purple-900 text-slate-300 border border-slate-700 transition">L10</button>
+                <button onclick="setLevel(20)" class="lvl-btn px-2.5 py-1 text-xs font-semibold rounded bg-slate-800 hover:bg-purple-900 text-slate-300 border border-slate-700 transition">L20</button>
+                <button onclick="setLevel(24)" class="lvl-btn px-2.5 py-1 text-xs font-semibold rounded bg-slate-800 hover:bg-purple-900 text-slate-300 border border-slate-700 transition">L24</button>
+                <button onclick="setLevel(30)" class="lvl-btn px-2.5 py-1 text-xs font-semibold rounded bg-slate-800 hover:bg-purple-900 text-slate-300 border border-slate-700 transition">L30</button>
+                <button onclick="setLevel(40)" class="lvl-btn px-2.5 py-1 text-xs font-semibold rounded bg-slate-800 hover:bg-purple-900 text-slate-300 border border-slate-700 transition">L40</button>
+                <button onclick="setLevel(60)" class="lvl-btn px-2.5 py-1 text-xs font-semibold rounded bg-fel/20 text-fel border border-fel/40 transition">L60</button>
+            </div>
+
+        </div>
     </section>
 
-    <section class="guide-block" id="panel-spells" role="tabpanel" tabindex="0" aria-labelledby="tab-spells" hidden>
-      <div class="section-kicker">Spell ranks · class quests · demon training</div>
-      <h2 id="spells-title">Keep your kit current</h2>
-      <p class="guide-lead">Visit the Warlock trainer for spell ranks. Visit a Demon Trainer for Grimoires, and have the matching demon summoned when you teach its abilities. These are separate training tracks.</p>
-      <table class="guide-table">
-        <thead><tr><th>Level</th><th>Train or unlock</th><th>Field note</th></tr></thead>
-        <tbody>
-          <tr><td>1–4</td><td>Demon Skin, Shadow Bolt, Immolate, Imp quest, Corruption; Blood Pact Grimoire</td><td>Get the Imp quest done early and keep the pet active.</td></tr>
-          <tr><td>6–10</td><td>Life Tap (6), Bane of Agony and Fear (8), Drain Soul and Healthstone; Voidwalker quest (10)</td><td>Do the Voidwalker quest from Undercity if convenient; use Drain Soul to build shards.</td></tr>
-          <tr><td>14–20</td><td>Drain Life (14), Demon Armor, Rain of Fire, Ritual of Summoning; Succubus/Incubus quest</td><td>Upgrade Demon Skin to Demon Armor at 20. Rain of Fire suits grouped dungeon packs.</td></tr>
-          <tr><td>30</td><td>Siphon Life talent; Felhunter class quest; Hellfire</td><td>Felhunter brings Devour Magic. Hellfire damages you; treat it as a risky AoE tool.</td></tr>
-          <tr><td>36</td><td>Felhunter Spell Lock Grimoire; Spellstone</td><td>Keep Spell Lock manual, not autocast, to interrupt the cast you choose.</td></tr>
-          <tr><td>41 / 51</td><td>Demonic Sacrifice talent / Wrack talent</td><td>Felhunter sacrifice is the solo sustain choice in current guidance; Wrack amplifies active Shadow DoTs.</td></tr>
-        </tbody>
-      </table>
-      <div class="guide-grid" style="margin-top:16px">
-        <article class="guide-item"><h3>Choose your demon</h3><p><strong>Voidwalker:</strong> safest solo pulls; let it establish threat. <strong>Succubus/Incubus:</strong> damage and Humanoid control. <strong>Felhunter:</strong> dispel and interrupt. <strong>Imp:</strong> ranged damage and Blood Pact for groups.</p></article>
-        <article class="guide-item"><h3>Undead racial package</h3><p>Touch of the Grave adds passive damage and healing. Cannibalize restores health and, in Forever, mana from a nearby eligible Humanoid or Undead corpse. Will of the Forsaken is a situational fear/charm/sleep break, not a damage button.</p></article>
-      </div>
-    </section>
+    <!-- Navigation Tabs -->
+    <nav class="bg-cardbg border-b border-borderbg overflow-x-auto">
+        <div class="max-w-7xl mx-auto flex space-x-1 px-4 sm:px-6">
+            <button data-tab="tab-spells" class="nav-tab active-tab flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold border-b-2 border-fel text-fel whitespace-nowrap transition">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Spells & Rotation
+            </button>
+            <button data-tab="tab-talents" class="nav-tab flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">
+                <i class="fa-solid fa-tree"></i> Talents (Affliction)
+            </button>
+            <button data-tab="tab-gear" class="nav-tab flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">
+                <i class="fa-solid fa-shield-halved"></i> Gear & Quests
+            </button>
+            <button data-tab="tab-professions" class="nav-tab flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">
+                <i class="fa-solid fa-flask"></i> Professions & Crafting
+            </button>
+            <button data-tab="tab-prep" class="nav-tab flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">
+                <i class="fa-solid fa-calendar-check text-amber-400"></i> WoW Forever Prep
+            </button>
+            <button data-tab="tab-macros" class="nav-tab flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">
+                <i class="fa-solid fa-terminal"></i> Makron & Tips
+            </button>
+        </div>
+    </nav>
 
-    <section class="guide-block" id="panel-gear" role="tabpanel" tabindex="0" aria-labelledby="tab-gear" hidden>
-      <div class="section-kicker">Gear · professions · inventory</div>
-      <h2 id="gear-title">Gear for less downtime</h2>
-      <p class="guide-lead">A wand is the first major quality-of-life upgrade: it finishes targets without draining mana. For Affliction, prioritize Shadow Spell Power and general Spell Power, then useful sustain and survivability.</p>
-      <div class="guide-grid">
-        <article class="guide-item"><h3>Stat priorities</h3><ul><li>Spell Power / Shadow damage for DoTs, drains, and Shadow Bolt.</li><li>Spell hit is useful, but 4/5 Suppression already supplies 4% by level 13.</li><li>Critical Strike improves as Pandemic and Malevolence enter the build.</li><li>Spirit improves Life Tap returns; Intellect and Stamina smooth mana and health pools.</li></ul></article>
-        <article class="guide-item"><h3>Upgrade checklist</h3><ul><li>Buy or craft the best affordable wand early; keep upgrading it.</li><li>Compare actual spell stats, not armor rating or item level alone.</li><li>Keep a Healthstone, food, water, bandages, and bag space for Soul Shards.</li><li>Tailoring plus Enchanting is a strong self-sufficiency pair; current guides call out crafted class gear and early wands.</li></ul></article>
-      </div>
-      <p class="notice">Exact best leveling drops are still incomplete in pre-launch references, especially beyond level 35. Treat named loot lists as suggestions, not guaranteed Forever drops; the level-appropriate quest reward or crafted upgrade is usually the practical choice.</p>
-    </section>
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-    <section class="guide-block" id="panel-crafting" role="tabpanel" tabindex="0" aria-labelledby="tab-crafting" hidden>
-      <div class="section-kicker">Personal upgrades · Affliction</div>
-      <h2 id="crafting-title">Craft toward Shadow damage</h2>
-      <p class="guide-lead">For a self-geared Undead Affliction Warlock, pair Tailoring with Enchanting: cloth drops feed Tailoring, surplus crafts can be disenchanted, and Enchanting supplies early wands. Make the upgrades below when you reach the level and the materials are affordable; don’t delay leveling to grind profession skill.</p>
-      <table class="guide-table">
-        <thead><tr><th>Level</th><th>Go for</th><th>How to get it / decision</th></tr></thead>
-        <tbody>
-          <tr><td>1</td><td>Novice’s Practice Wand</td><td>Crafted with Enchanting. Use as your first no-mana filler if available.</td></tr>
-          <tr><td>5</td><td>Lesser Magic Wand</td><td>Crafted with Enchanting. Replace the starter wand when its damage is an upgrade.</td></tr>
-          <tr><td>13</td><td>Greater Magic Wand</td><td>Crafted with Enchanting. This is the main early wand target before dungeon/quest alternatives.</td></tr>
-          <tr><td>15</td><td>Filigreed Shadow Gown</td><td>Tailoring 75. Forever-specific BoP cloth with Shadow damage for Affliction; craft it yourself or check player listings.</td></tr>
-          <tr><td>18+</td><td>Gravestone Scepter</td><td>Blackfathom Deeps quest reward. A strong wand upgrade if you run the dungeon; keep it over the level-30 Greater Mystic Wand for Affliction.</td></tr>
-          <tr><td>20</td><td>Staff of Soran’ruk + Filigreed Shadow Leggings</td><td>Staff: quest chain using items from Blackfathom Deeps and Shadowfang Keep. Leggings: Tailoring 100. Do the quest if those dungeons fit your route; compare the staff’s Shadow damage and Stamina to your current weapon.</td></tr>
-          <tr><td>25</td><td>Filigreed Shadow Circlet</td><td>Tailoring 125. A class-focused head-slot craft; make it if the materials and skill are within reach.</td></tr>
-          <tr><td>27</td><td>Wand of Mana Concentration</td><td>Optional crafted wand if you are still wanding. Compare it with Gravestone Scepter before spending materials.</td></tr>
-          <tr><td>36</td><td>Spellstone</td><td>Train Create Spellstone and use the Shadow damage / spell haste imbue for Affliction. Firestone at 28 is generally less aligned with your Shadow-heavy damage.</td></tr>
-        </tbody>
-      </table>
-      <div class="guide-grid" style="margin-top:16px">
-        <article class="guide-item"><h3>What to prioritize</h3><p>First secure a usable wand, then take the cheap Shadow tailoring upgrades as their level gates arrive. After that, choose gear with Spell Power or Shadow damage, followed by Stamina, Spirit, and Intellect. Keep a quest or dungeon reward if it beats a costly craft.</p></article>
-        <article class="guide-item"><h3>Profession routine</h3><p>Loot humanoid cloth while questing. Keep Tailoring near the recipes you want, disenchant spare crafted pieces to feed Enchanting, and make bags if you need more space. Tradeable wands can also be bought, so you don’t have to power-level Enchanting before using one.</p></article>
-      </div>
-      <p class="notice">The item path comes from pre-launch WoW Forever guides and may change at launch. Check the in-game tooltip and current database before investing gold; item availability, recipe skill, and level requirements can be tuned.</p>
-      <div class="sources"><a href="https://www.zockify.com/forever/warlock/leveling/" target="_blank" rel="noreferrer">Zockify: leveling gear and wand progression</a><a href="https://www.method.gg/wow-forever/wow-forever-warlock-leveling-guide-and-talents" target="_blank" rel="noreferrer">Method: Forever Warlock professions</a><a href="https://www.icy-veins.com/wow-forever/affliction-warlock-leveling" target="_blank" rel="noreferrer">Icy Veins: Affliction gear priorities</a></div>
-    </section>
+        <!-- TAB 1: SPELLS & ROTATION -->
+        <section id="tab-spells" class="tab-content space-y-6">
+            
+            <!-- Phase Overview Header -->
+            <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg relative overflow-hidden">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <div class="text-xs uppercase tracking-wider text-fel font-bold mb-1">Aktuell Level-Fas</div>
+                        <h2 id="phase-title" class="text-xl sm:text-2xl font-bold text-slate-100 gold-header">Leveling Fash</h2>
+                        <p id="phase-description" class="text-sm text-slate-300 mt-2 max-w-3xl leading-relaxed">
+                            Beskrivning av spelstil för denna nivån...
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-    <section class="guide-block" id="panel-macros" role="tabpanel" tabindex="0" aria-labelledby="tab-macros" hidden>
-      <div class="section-kicker">Paste into the in-game macro window</div>
-      <h2 id="macros-title">Useful macros</h2>
-      <p class="guide-lead">Set each macro up once, then put it on a convenient key. Create one macro per box and test it on a safe target.</p>
-      <ol class="setup-steps">
-        <li>Open the game menu with Esc and choose Macros. You can also try <code>/macro</code> in chat.</li>
-        <li>Choose General Macros, click New, enter a short name, and choose an icon. Use the question-mark icon for automatic spell icons.</li>
-        <li>Copy one snippet below into the macro text box and click Save. Make a separate macro for each snippet.</li>
-        <li>Drag the new icon from the macro window onto your action bar, then bind a key in Key Bindings if desired.</li>
-      </ol>
-      <p class="notice">If a macro does nothing, check the exact spell name for your client language and confirm the required spell or pet is unlocked. Macros cannot automate a full rotation or bypass the global cooldown.</p>
-      <div class="macro-list">
-        <article class="macro"><div class="macro-head"><div><strong>Pet attack + Corruption</strong><br><span>Starts your pet and applies your main instant DoT.</span></div><button class="copy-button" type="button" data-copy="macro-pet-dot">Copy</button></div><pre><code id="macro-pet-dot">#showtooltip Corruption
-    /petattack
-    /cast Corruption</code></pre></article>
-        <article class="macro"><div class="macro-head"><div><strong>Pet control</strong><br><span>Attack normally; hold Shift to call your demon back.</span></div><button class="copy-button" type="button" data-copy="macro-pet-control">Copy</button></div><pre><code id="macro-pet-control">#showtooltip
-/petattack [nomod]
-/petfollow [mod:shift]</code></pre></article>
-        <article class="macro"><div class="macro-head"><div><strong>Emergency Fear</strong><br><span>Stops pet attacks before you fear a target.</span></div><button class="copy-button" type="button" data-copy="macro-fear">Copy</button></div><pre><code id="macro-fear">#showtooltip Fear
-/petpassive
-/petfollow
-/stopcasting
-/cast Fear</code></pre></article>
-        <article class="macro"><div class="macro-head"><div><strong>Use Healthstone</strong><br><span>Replace the item name if your stone has a different rank/name.</span></div><button class="copy-button" type="button" data-copy="macro-stone">Copy</button></div><pre><code id="macro-stone">#showtooltip Healthstone
-/use Healthstone</code></pre></article>
-      </div>
-      <p class="notice">Do not macro every damage spell into a cast sequence. The global cooldown and server macro rules mean a sequence will not play a full rotation automatically. Keep Fear, pet control, Healthstone, Cannibalize, and Spell Lock deliberate.</p>
-    </section>
+            <!-- Optimal Rotation Card -->
+            <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg">
+                <h3 class="text-lg font-bold text-slate-100 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-right text-purple-400"></i> Leveling Combat Priorities <span id="rotation-lvl-tag" class="text-xs bg-purple-900/60 text-purple-300 px-2 py-0.5 rounded">Level 60</span>
+                </h3>
+                <div id="rotation-steps" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <!-- Dynamic Rotation Steps -->
+                </div>
+            </div>
 
-    <section class="guide-block" id="panel-rotation" role="tabpanel" tabindex="0" aria-labelledby="tab-rotation" hidden>
-      <div class="section-kicker">Solo questing · multi-target · dungeons</div>
-      <h2 id="rotation-title">Rotation by situation</h2>
-      <div class="guide-grid">
-        <article class="guide-item"><h3>Early levels, before the wand</h3><p>Keep Demon Skin up. Open with Immolate; add Corruption once learned, then use a modest Shadow Bolt or wand/auto attack to finish. Shadow Bolt is expensive early, so avoid repeatedly hard-casting if the target is already dying.</p></article>
-        <article class="guide-item"><h3>One durable target</h3><p>Send the pet first. Apply Immolate if it will tick, then Corruption and Bane of Agony. Add Siphon Life from 30 only if the mob will live long enough. Wand while DoTs tick; use Drain Life when health is low and instant Shadow Bolt on Nightfall procs.</p></article>
-        <article class="guide-item"><h3>Multiple quest mobs</h3><p>Let the Voidwalker build threat, then spread Corruption and Bane of Agony across enemies that will survive long enough. Keep moving between instant DoTs. Drain Life to recover; use Nightfall procs on the healthiest target.</p></article>
-        <article class="guide-item"><h3>Resource loop & boss fights</h3><p>Use Life Tap when you have safe health headroom, then recover with Drain Life, Cannibalize, food, or bandages. Drain Soul when you need shards. On elites and bosses, maintain long DoTs, use an appropriate utility Curse alongside Bane of Agony, and channel Wrack after your Shadow DoTs are active.</p></article>
-        <article class="guide-item"><h3>At level 41 and beyond</h3><p>For solo farming, current guidance favors sacrificing the Felhunter for its health regeneration. If an encounter needs an interrupt, dispel, crowd control, or pet tank, summon the useful demon instead; that removes the sacrifice buff until reapplied.</p></article>
-        <article class="guide-item"><h3>Dungeon etiquette</h3><p>Turn off Voidwalker Torment when a tank is holding threat. Keep pet attacks controlled, use Spell Lock on dangerous casts, and bring Healthstones and Soul Shards. Use Rain of Fire on grouped packs; Hellfire is close-range and costs your own health.</p></article>
-      </div>
-    </section>
+            <!-- Demon & Pet Management Section -->
+            <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg">
+                <h3 class="text-lg font-bold text-slate-100 mb-3 gold-header flex items-center gap-2">
+                    <i class="fa-solid fa-dog text-fel"></i> Demon & Pet Guide (Demonology & Utility)
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                    <div class="bg-slate-900/90 p-3.5 rounded-lg border border-purple-900/40 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-purple-300 text-sm">Imp</span>
+                                <span class="bg-purple-950 text-purple-300 text-[10px] px-1.5 py-0.5 rounded font-mono">Lvl 1</span>
+                            </div>
+                            <p class="text-slate-400">Används Lvl 1-10. Ger Blood Pact (+Stamina) och Firebolt support. Slå av Autocast på Firebolt om manan tar slut för snabbt!</p>
+                        </div>
+                        <div class="mt-2 pt-2 border-t border-purple-900/30 text-[10px] text-fel">Roll: Starter Damage & Stamina Buff</div>
+                    </div>
+                    <div class="bg-slate-900/90 p-3.5 rounded-lg border border-blue-900/40 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-blue-300 text-sm">Voidwalker</span>
+                                <span class="bg-blue-950 text-blue-300 text-[10px] px-1.5 py-0.5 rounded font-mono">Lvl 10</span>
+                            </div>
+                            <p class="text-slate-400">Din primära tank från level 10. Låt den bygga threat innan DoTs. Blizzard ökade Voidwalkerns grundhälsa i hotfixen 6 nov 2026; undvik gamla Classic-petvärden.</p>
+                        </div>
+                        <div class="mt-2 pt-2 border-t border-blue-900/30 text-[10px] text-blue-400">Roll: Solo Tank & Emergency Shield</div>
+                    </div>
+                    <div class="bg-slate-900/90 p-3.5 rounded-lg border border-pink-900/40 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-pink-300 text-sm">Succubus</span>
+                                <span class="bg-pink-950 text-pink-300 text-[10px] px-1.5 py-0.5 rounded font-mono">Lvl 20</span>
+                            </div>
+                            <p class="text-slate-400">Succubus och Incubus har Seduce för humanoid crowd control. Välj pet efter kontrollbehov och aktuell Forever-balans; anta inte att Sayaad alltid har högst DPS.</p>
+                        </div>
+                        <div class="mt-2 pt-2 border-t border-pink-900/30 text-[10px] text-pink-400">Roll: High DPS & Seduce CC</div>
+                    </div>
+                    <div class="bg-slate-900/90 p-3.5 rounded-lg border border-emerald-900/40 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-emerald-300 text-sm">Felhunter</span>
+                                <span class="bg-emerald-950 text-emerald-300 text-[10px] px-1.5 py-0.5 rounded font-mono">Lvl 30</span>
+                            </div>
+                            <p class="text-slate-400">Devour Magic finns från summon-nivån 30. Spell Lock blir tillgänglig vid level 36, inte direkt när Felhunter låses upp.</p>
+                        </div>
+                        <div class="mt-2 pt-2 border-t border-emerald-900/30 text-[10px] text-emerald-400">Roll: Anti-Caster & PvP Utility</div>
+                    </div>
+                </div>
+            </div>
 
-    <section class="guide-block" id="panel-sources" role="tabpanel" tabindex="0" aria-labelledby="tab-sources" hidden>
-      <div class="section-kicker">Read before launch day</div>
-      <h2 id="sources-title">Forever references</h2>
-      <p class="guide-lead">This page was checked October 29, 2026, before the November 5 launch. Current material is partly beta-based; class tuning, loot tables, and zone progression may change. Recheck these after launch.</p>
-      <div class="sources">
-        <a href="https://www.method.gg/wow-forever/wow-forever-warlock-leveling-guide-and-talents" target="_blank" rel="noreferrer">Method: Forever Warlock leveling</a>
-        <a href="https://www.icy-veins.com/wow-forever/affliction-warlock-leveling" target="_blank" rel="noreferrer">Icy Veins: Affliction leveling</a>
-        <a href="https://www.icy-veins.com/wow-forever/warlock-class-overview" target="_blank" rel="noreferrer">Icy Veins: Forever Warlock changes</a>
-        <a href="https://wowforevertalents.com/warlock" target="_blank" rel="noreferrer">WoW Forever talent calculator</a>
-      </div>
-    </section>
-  </section>
-  <footer class="shell"><span>FIELD NOTES · FORSAKEN WARLOCK</span><span>Progress is saved in this browser.</span></footer>
+            <!-- Spells List Grid -->
+            <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-book-bookmark text-fel"></i> WoW Forever spellmilestones
+                    </h3>
+                    <span id="spell-count" class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full font-mono">0 spells upplåsta</span>
+                </div>
+                
+                <div id="spells-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <!-- Spells cards -->
+                </div>
+            </div>
 
-  <script>
-    const route = [
-      { min: 1, max: 9, range: '1–10', zone: 'Tirisfal Glades', detail: 'Deathknell · Brill · Undercity', note: 'Imp quest early; Voidwalker at 10' },
-      { min: 10, max: 19, range: '10–20', zone: 'Silverpine Forest', detail: 'Forsaken quest hubs · Shadowfang Keep group option', note: 'Train ranks in Undercity' },
-      { min: 20, max: 29, range: '20–30', zone: 'Hillsbrad & Stonetalon', detail: 'Hillsbrad Foothills · Sunrock Retreat', note: 'Mix zones to match quests' },
-      { min: 30, max: 39, range: '30–40', zone: 'Stranglethorn & Desolace', detail: 'Grom’gol hub · Shadowprey Village', note: 'PvP risk in Stranglethorn' },
-      { min: 40, max: 49, range: '40–50', zone: 'Tanaris & Feralas', detail: 'Gadgetzan · Camp Mojache', note: 'Maraudon group option' },
-      { min: 50, max: 54, range: '50–55', zone: 'Un’Goro & Felwood', detail: 'Marshal’s Refuge · Emerald Sanctuary', note: 'Gather flight paths' },
-      { min: 55, max: 57, range: '55–58', zone: 'Western Plaguelands', detail: 'The Bulwark · focused quest loops', note: 'Upgrade spell ranks' },
-      { min: 58, max: 60, range: '58–60', zone: 'Eastern Plaguelands & Winterspring', detail: 'Light’s Hope Chapel · Everlook', note: 'Choose quests by availability' }
-    ];
-    const zoneList = document.querySelector('#zone-list');
-    const routeNav = document.querySelector('#route-nav');
-    const search = document.querySelector('#search');
-    const remainingButton = document.querySelector('#remaining');
-    let remainingOnly = false;
-    let currentLevel = 1;
+        </section>
 
-    function storageKey() { return 'field-notes-wow-undead-warlock'; }
-    function getCompleted() {
-      try { return JSON.parse(localStorage.getItem(storageKey()) || '[]'); }
-      catch { return []; }
-    }
-    function saveCompleted(completed) { localStorage.setItem(storageKey(), JSON.stringify(completed)); }
+        <!-- TAB 2: TALENTS -->
+        <section id="tab-talents" class="tab-content hidden space-y-6">
+            <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-borderbg pb-4 mb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-100 gold-header">Forever Affliction Talent Path</h2>
+                        <p class="text-xs text-slate-400 mt-1">
+                            Forever Affliction 42/9/0 leveling-order. Talangpoäng vid vald level: <span id="talent-points-available" class="text-fel font-bold">51 poäng</span>. Högre-levelval är teori; kontrollera i spelet.
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="autoAllocateTalents()" class="bg-purple-900/60 hover:bg-purple-800 text-purple-200 border border-purple-500/40 text-xs px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Auto-fyll för Level
+                        </button>
+                        <button onclick="resetTalents()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-1.5 rounded-lg transition">
+                            <i class="fa-solid fa-rotate-left"></i> Nollställ
+                        </button>
+                    </div>
+                </div>
 
-    function render() {
-      const completed = getCompleted();
-      const query = search.value.trim().toLowerCase();
-      const visibleZones = route.map((item, index) => ({ ...item, index }))
-        .filter(item => (!remainingOnly || !completed.includes(item.index)) &&
-          `${item.range} ${item.zone} ${item.detail} ${item.note}`.toLowerCase().includes(query));
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-slate-950/80 border border-purple-900/40 rounded-xl p-4">
+                        <div class="flex justify-between items-center mb-4 pb-2 border-b border-purple-900/30">
+                            <h3 class="font-bold text-purple-300 flex items-center gap-2">
+                                <i class="fa-solid fa-skull text-purple-500"></i> Affliction Tree
+                            </h3>
+                            <span id="affliction-spent" class="text-xs font-mono font-bold bg-purple-950 text-purple-300 px-2 py-1 rounded">0 Poäng</span>
+                        </div>
+                        <div id="affliction-talents" class="space-y-3"></div>
+                    </div>
 
-      zoneList.innerHTML = visibleZones.map((item, order) => `
-        <article class="zone ${completed.includes(item.index) ? 'completed' : ''} ${item.index === route.findIndex(zone => currentLevel >= zone.min && currentLevel <= zone.max) ? 'current' : ''}" id="zone-${item.index}" style="animation-delay:${order * 35}ms">
-          <div class="level">LV ${item.range}</div>
-          <div><h3 class="zone-title">${item.zone}</h3><p class="zone-meta">${item.detail}</p></div>
-          <div class="zone-note">${item.note}</div>
-          <button type="button" class="check" data-index="${item.index}" aria-label="Mark ${item.zone} ${completed.includes(item.index) ? 'incomplete' : 'complete'}" aria-pressed="${completed.includes(item.index)}">${completed.includes(item.index) ? '✓' : ''}</button>
-        </article>`).join('');
+                    <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4">
+                        <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-800">
+                            <h3 class="font-bold text-emerald-400 flex items-center gap-2">
+                                <i class="fa-solid fa-ghost text-emerald-500"></i> Demonology Tree
+                            </h3>
+                            <span id="demonology-spent" class="text-xs font-mono font-bold bg-slate-900 text-emerald-400 px-2 py-1 rounded">0 Poäng</span>
+                        </div>
+                        <div id="demonology-talents" class="space-y-3"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-      document.querySelector('#empty-state').style.display = visibleZones.length ? 'none' : 'block';
-      document.querySelector('#progress-label').textContent = `${completed.length} / ${route.length} zones complete`;
-      const percent = Math.round(completed.length / route.length * 100);
-      document.querySelector('#progress-percent').textContent = `${percent}%`;
-      document.querySelector('#progress-fill').style.width = `${percent}%`;
+        <!-- TAB 3: GEAR & QUESTS -->
+        <section id="tab-gear" class="tab-content hidden space-y-6">
+            <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg">
+                <h3 class="text-lg font-bold text-slate-100 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line text-amber-500"></i> Stat-Prioriteringar för Leveling
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="bg-slate-900/80 p-3.5 rounded-lg border border-purple-900/40">
+                        <div class="text-xs font-bold text-purple-400 uppercase tracking-wider">1. Spell Power</div>
+                        <div class="text-xs text-slate-300 mt-1">Ökar spellskadan. Shadow damage är relevant för Affliction, men jämför hela föremålets stats.</div>
+                    </div>
+                    <div class="bg-slate-900/80 p-3.5 rounded-lg border border-red-900/40">
+                        <div class="text-xs font-bold text-red-400 uppercase tracking-wider">2. Spell Hit</div>
+                        <div class="text-xs text-slate-300 mt-1">Minskar missar. Suppression ger Affliction-spells hit, så anpassa gear efter dina talangpoäng.</div>
+                    </div>
+                    <div class="bg-slate-900/80 p-3.5 rounded-lg border border-blue-900/40">
+                        <div class="text-xs font-bold text-blue-400 uppercase tracking-wider">3. Critical Strike</div>
+                        <div class="text-xs text-slate-300 mt-1">DoTs kan critta i Forever; Pandemic gör critvärdet viktigare än i Classic.</div>
+                    </div>
+                    <div class="bg-slate-900/80 p-3.5 rounded-lg border border-slate-700">
+                        <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">4 Intellect · 5 Spirit · 6 Haste · 7 Stamina</div>
+                        <div class="text-xs text-slate-300 mt-1">Spirit ger mer mana från Life Tap. Haste påverkar inte DoT- eller channel-ticks enligt aktuell beta-data. Stamina är främst överlevnad.</div>
+                    </div>
+                </div>
+            </div>
 
-      routeNav.innerHTML = route.map((item, index) => `<a href="#zone-${index}" class="${completed.includes(index) ? 'active' : ''}"><span>${item.zone}</span><small>${item.range}</small></a>`).join('');
-      zoneList.querySelectorAll('.check').forEach(button => button.addEventListener('click', () => {
-        const index = Number(button.dataset.index);
-        const next = getCompleted();
-        saveCompleted(next.includes(index) ? next.filter(item => item !== index) : [...next, index]);
-        render();
-      }));
-    }
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg">
+                    <h3 class="text-lg font-bold text-slate-100 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-wand-sparkles text-fel"></i> Forever-vapen att söka
+                    </h3>
+                    <div id="wand-list" class="space-y-2.5"></div>
+                </div>
 
-    search.addEventListener('input', render);
-    remainingButton.addEventListener('click', () => {
-      remainingOnly = !remainingOnly;
-      remainingButton.setAttribute('aria-pressed', String(remainingOnly));
-      render();
-    });
-    const levelRange = document.querySelector('#level-range');
-    const levelNumber = document.querySelector('#level-number');
-    const milestones = [
-      { level: 1, spells: 'Complete the Imp class quest; train Demon Skin, Immolate, and Shadow Bolt.', play: 'Keep Demon Skin up. Open with Immolate; Shadow Bolt is costly, so finish with wand/auto attacks when possible.' },
-      { level: 4, spells: 'Train Corruption; buy the Imp’s Blood Pact Grimoire.', play: 'Apply Corruption to targets that will live for its ticks.' },
-      { level: 6, spells: 'Train Life Tap and the next Shadow Bolt rank.', play: 'Use Life Tap between pulls, then eat to refill health and mana.' },
-      { level: 8, spells: 'Train Bane of Agony and Fear.', play: 'Bane of Agony is a strong pull/tag; do not refresh early because its later ticks hit harder.' },
-      { level: 10, spells: 'Unlock Drain Soul, Healthstone, and Voidwalker. Start the level-10 class quest from Undercity.', play: 'Let Voidwalker establish threat before applying DoTs.' },
-      { level: 14, spells: 'Train Drain Life and the next Corruption rank.', play: 'Drain Life when you need health; otherwise preserve mana with your wand.' },
-      { level: 18, spells: 'Improved Corruption should make Corruption instant.', play: 'Move between targets while spreading Corruption.' },
-      { level: 20, spells: 'Train Demon Armor, Ritual of Summoning, Rain of Fire; take Succubus/Incubus quest.', play: 'Use a Voidwalker for safety or Succubus/Incubus for faster damage.' },
-      { level: 25, spells: 'Nightfall can now proc instant Shadow Bolt.', play: 'Spend procs on healthy targets, not a mob already dying to DoTs.' },
-      { level: 28, spells: 'Create Firestone becomes available; keep pet Grimoires current.', play: 'Get Spellstone at 36; current Affliction guidance prefers its Shadow damage and haste.' },
-      { level: 30, spells: 'Learn Siphon Life talent and complete the Felhunter class quest.', play: 'Use Siphon Life on longer fights; Felhunter adds dispel utility.' },
-      { level: 36, spells: 'Train Spell Lock from the Felhunter Grimoire; Spellstone is available.', play: 'Use Spell Lock manually to interrupt dangerous casts.' },
-      { level: 41, spells: 'Reach Demonic Sacrifice in the current leveling talent path.', play: 'Felhunter sacrifice is the recommended solo sustain option; summoning a demon removes the buff.' },
-      { level: 51, spells: 'Unlock Wrack in the Affliction tree.', play: 'Apply Shadow DoTs first, then channel Wrack on a durable enemy.' }
-    ];
-    function updateLevel(value) {
-      const level = Math.max(1, Math.min(60, Number(value) || 1));
-      currentLevel = level;
-      levelRange.value = level;
-      levelNumber.value = level;
-      document.querySelector('#level-output').textContent = `Level ${level}`;
-      const zone = route.find(item => level >= item.min && level <= item.max) || route[route.length - 1];
-      const currentMilestone = [...milestones].reverse().find(item => item.level <= level) || milestones[0];
-      let talentText;
-      if (level < 10) talentText = 'At level 10, begin Suppression; spend four points by level 13 for 4% spell hit.';
-      else if (level <= 13) talentText = `Suppression ${level - 9}/5 — continue through level 13 for 4% spell hit.`;
-      else if (level <= 18) talentText = `Improved Corruption ${level - 13}/5 — finish at 18 for instant Corruption.`;
-      else if (level < 25) talentText = 'Follow the Affliction prerequisites toward 2/2 Nightfall at levels 25–26.';
-      else if (level <= 26) talentText = `Nightfall ${level - 24}/2 — unlock instant Shadow Bolt procs.`;
-      else if (level < 30) talentText = 'Continue the Affliction path toward Siphon Life at level 30.';
-      else if (level === 30) talentText = 'Take Siphon Life for another DoT and healing.';
-      else if (level <= 40) talentText = `Continue the 11-point Demonology dip toward Demonic Sacrifice at 41 (${level - 30}/11 points).`;
-      else if (level === 41) talentText = 'Take Demonic Sacrifice after the 11-point Demonology dip.';
-      else if (level < 51) talentText = 'Return to Affliction and follow the calculator path toward Wrack at 51.';
-      else talentText = 'Take Wrack at 51, then follow the calculator to complete the 40/11 leveling build.';
-      document.querySelector('#brief-title').textContent = `${zone.zone} · Levels ${zone.range}`;
-      document.querySelector('#route-summary').textContent = `${zone.zone} · Levels ${zone.range}`;
-      document.querySelector('#brief-talent').textContent = talentText;
-      document.querySelector('#brief-spells').textContent = currentMilestone.spells;
-      document.querySelector('#brief-gear').textContent = level < 10 ? 'Get a wand as early as you can; favor Spell Power, Shadow damage, Stamina, and Spirit.' : level < 28 ? 'Upgrade your wand; prioritize Spell/Shadow Power, then Spirit and Stamina. Save Soul Shard bag space.' : level < 36 ? 'Create Firestone at 28; upgrade to Spellstone at 36. Keep prioritizing Shadow/Spell Power and sustain.' : 'Use Spellstone and seek Spell/Shadow Power; Spirit supports Life Tap. Gear after 35 is still being documented.';
-      document.querySelector('#brief-play').textContent = currentMilestone.play;
-      render();
-    }
-    levelRange.addEventListener('input', () => updateLevel(levelRange.value));
-    levelNumber.addEventListener('input', () => updateLevel(levelNumber.value));
-    document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', async () => {
-      const code = document.querySelector(`#${button.dataset.copy}`).textContent;
-      try {
-        await navigator.clipboard.writeText(code);
-        button.textContent = 'Copied';
-      } catch {
-        button.textContent = 'Select text';
-      }
-      setTimeout(() => { button.textContent = 'Copy'; }, 1400);
-    }));
-    const guideTabs = [...document.querySelectorAll('[role="tab"]')];
-    function selectGuideTab(tab) {
-      guideTabs.forEach(item => {
-        const selected = item === tab;
-        item.setAttribute('aria-selected', String(selected));
-        item.tabIndex = selected ? 0 : -1;
-        document.querySelector(`#${item.getAttribute('aria-controls')}`).hidden = !selected;
-      });
-    }
-    guideTabs.forEach((tab, index) => {
-      tab.addEventListener('click', () => selectGuideTab(tab));
-      tab.addEventListener('keydown', event => {
-        let nextIndex;
-        if (event.key === 'ArrowRight') nextIndex = (index + 1) % guideTabs.length;
-        else if (event.key === 'ArrowLeft') nextIndex = (index - 1 + guideTabs.length) % guideTabs.length;
-        else if (event.key === 'Home') nextIndex = 0;
-        else if (event.key === 'End') nextIndex = guideTabs.length - 1;
-        else return;
-        event.preventDefault();
-        selectGuideTab(guideTabs[nextIndex]);
-        guideTabs[nextIndex].focus();
-      });
-    });
-    render();
-    updateLevel(1);
-  </script>
+                <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg">
+                    <h3 class="text-lg font-bold text-slate-100 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-purple-400"></i> Gear att crafta & söka
+                    </h3>
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 bg-slate-900/70 border border-fel-dark/40 rounded-lg">
+                            <span class="font-bold text-slate-200">Låglevel: vad du faktiskt kan bära</span>
+                            <p class="text-slate-400 mt-0.5"><strong>Level 5 — Brown Linen Robe:</strong> Tailoring 30, 3 Bolt of Linen Cloth + 1 Coarse Thread; 19 armor, +1 Spirit. En billig starter-chest, men byt ut den när bättre casterstats droppar.</p>
+                            <p class="text-slate-400 mt-1"><strong>Level 6 — Cloudy Stormsewn Handwraps:</strong> Tailoring 55, 4 Bolt of Linen Cloth + 4 Coarse Thread; 13 armor, +1 Spirit. Billig hand-slot-uppgradering om dina nuvarande handskar är sämre.</p>
+                            <p class="text-slate-400 mt-1"><strong>Level 10 — Novice Arcanist's Sash:</strong> Tailoring 50, 8 Bolt of Linen Cloth + 2 Fine Thread + 2 Minor Mana Potion; +4 Spell Power, +3 Intellect och +3 Stamina. Det här är den tydligaste tidiga Warlock-craften; itemet kräver level 10 och är BoP.</p>
+                        </div>
+                        <div class="p-3 bg-slate-900/70 border border-slate-800 rounded-lg">
+                            <span class="font-bold text-slate-200">Shadow Tailoring: recipe-trappa</span>
+                            <p class="text-slate-400 mt-0.5">Sök efter Shadow Boots (60 Tailoring), Shadow Gloves (75), Shadow Sash (85), Shadow Circlet (100), Shadow Gown (110) och Shadow Leggings (125). Skillkravet är Tailoring-skill, inte karaktärsnivå.</p>
+                        </div>
+                        <div class="p-3 bg-slate-900/70 border border-fel-dark/40 rounded-lg">
+                            <span class="font-bold text-slate-200">Merchant's Favor, Horde</span>
+                            <p class="text-slate-400 mt-0.5">Merchant's Favor-mönstren kostar 30 Favor styck och Shadow-plaggen är bind-on-pickup: du behöver själv ha Tailoring för att använda dem. Fyll Waylaid Supply Crates och köp mönstren från Jim'bek vid supply-campen utanför Crossroads. Kontrollera skill och statrad i spelet.</p>
+                        </div>
+                        <div class="p-3 bg-slate-900/70 border border-slate-800 rounded-lg">
+                            <span class="font-bold text-slate-200">Dungeon craft: Filigreed Shadow Gown</span>
+                            <p class="text-slate-400 mt-0.5">Håll utkik efter Pattern: Filigreed Shadow Gown från Lord Cobrahn i Wailing Caverns. Receptet anges vid 75 Tailoring. Sök efter mönstret/lootet i dungeon; drop och bind-regler kan ändras, så verifiera i spelet.</p>
+                        </div>
+                        <div class="p-3 bg-slate-900/70 border border-slate-800 rounded-lg">
+                            <span class="font-bold text-slate-200">Wands och övrigt AH-gear</span>
+                            <p class="text-slate-400 mt-0.5">Sök Gravestone Scepter (Blackfathom Villainy, cirka 18+), Staff/Orb of Soran'ruk och nya Forever-dungeonvapen. Wands skalar inte med spell power; stå still 0,5 s före skott. Prioritera spell power, hit/crit efter talanger, Intellect och Spirit; jämför tooltipar i spelet.</p>
+                        </div>
+                        <div class="p-3 bg-amber-950/30 border border-amber-800/50 rounded-lg">
+                            <span class="font-bold text-amber-200">Kontrollera före craft</span>
+                            <p class="text-amber-100/80 mt-0.5">Datakontroll 7 nov 2026, build 1.60.1.70840; Tailoring-guiden senast uppdaterad 3 nov. Receptkällor och vissa nivå-40+ items är inte fullt verifierade. Spara Favor/material och kontrollera in-game innan köp.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg">
+                <h3 class="text-lg font-bold text-slate-100 mb-4 flex items-center justify-between">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-scroll text-amber-400"></i> Klass- & Gear-Quests</span>
+                    <span id="quest-filter-lvl" class="text-xs bg-slate-800 text-amber-400 px-2.5 py-1 rounded">Level 60</span>
+                </h3>
+                <div id="quests-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+            </div>
+        </section>
+
+        <!-- TAB 4: PROFESSIONS -->
+        <section id="tab-professions" class="tab-content hidden space-y-6">
+            <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg">
+                <h2 class="text-xl font-bold text-slate-100 gold-header mb-1">Professions & Warlock Crafting Guide</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-purple-900/40">
+                        <div class="text-xs font-bold text-purple-400 uppercase tracking-wider mb-1">Warlock Leveling</div>
+                        <div class="text-sm font-bold text-slate-100">Tailoring + Enchanting</div>
+                        <p class="text-xs text-slate-400 mt-2">Shadow-plagg låses upp vid Tailoring-skill 60–125. Enchanting kan bryta ner ointressanta craftade plagg till material.</p>
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+                        <div class="text-xs font-bold text-red-400 uppercase tracking-wider mb-1">PvP-alternativ</div>
+                        <div class="text-sm font-bold text-slate-100">Mining + Engineering</div>
+                        <p class="text-xs text-slate-400 mt-2">Välj om du prioriterar Engineering-verktyg framför casterplaggen.</p>
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+                        <div class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-1">Consumables</div>
+                        <div class="text-sm font-bold text-slate-100">Herbalism + Alchemy</div>
+                        <p class="text-xs text-slate-400 mt-2">Självförsörjning på potions/elixirs; mindre personlig gearvinst än Tailoring.</p>
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+                        <div class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1">Guld</div>
+                        <div class="text-sm font-bold text-slate-100">Tailoring + gathering</div>
+                        <p class="text-xs text-slate-400 mt-2">Tailoring behöver inte gathering för cloth; välj Mining/Herbalism om AH-guld är viktigare än Enchanting.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg">
+                <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-2 border-b border-borderbg pb-3 mb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-100 gold-header">Tailoring + Enchanting per karaktärsnivå</h2>
+                        <p class="text-xs text-slate-400 mt-1">Karaktärsnivån låser upp profession rank; recepten kräver separat professionskill. Craftantal är ungefärliga eftersom gula/gröna recept kan ge färre skill-ups.</p>
+                    </div>
+                    <span class="text-[10px] text-slate-500 font-mono">Forever 1–300 · Horde</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-slate-900/80 border border-slate-800 rounded-lg">
+                        <h3 class="font-bold text-fel text-sm mb-2">Karaktär 1–9 · Apprentice, skill 1–75</h3>
+                        <p class="text-xs text-slate-300"><strong>Tailoring:</strong> skill 1–30 Bolt of Linen Cloth (cirka 60 Linen Cloth), 30–55 Linen Belt (cirka 28), 55–75 Bolt of Woolen Cloth (cirka 135 Wool Cloth). Spara bultarna för nästa steg.</p>
+                        <p class="text-xs text-slate-300 mt-2"><strong>Enchanting:</strong> skill 1 Runed Copper Rod; 2–20 Enchant Bracer - Inferior Stamina; 20–70 Enchant Bracer - Minor Deflect; 70–75 Enchant Chest - Minor Absorption. Horde-tränare: Vance Undergloom i Tirisfal Glades eller en stadstränare i Undercity.</p>
+                    </div>
+                    <div class="p-4 bg-slate-900/80 border border-slate-800 rounded-lg">
+                        <h3 class="font-bold text-fel text-sm mb-2">Karaktär 10–19 · Journeyman, skill cap 150</h3>
+                        <p class="text-xs text-slate-300"><strong>Rank:</strong> träna Journeyman vid karaktär level 10 och skill 50; cap blir 150. Båda yrkena har tränare i Horde-städer.</p>
+                        <p class="text-xs text-slate-300 mt-2"><strong>Tailoring:</strong> skill 80–95 Woolen Cape, 95–100 Double-Stitched Woolen Shoulders, 100–120 Bolt of Silk Cloth, 120–140 Gloves of Meditation och 140–150 Bolt of Mageweave om tyget är överkomligt. Shadow-recept börjar vid skill 60: Boots, Gloves, Sash, Circlet, Gown och Leggings vid 60/75/85/100/110/125; de kostar 30 Merchant's Favor och är BoP.</p>
+                        <p class="text-xs text-slate-300 mt-2"><strong>Enchanting:</strong> 75–109 Minor Absorption, 109–110 Runed Silver Rod, 110–150 Enchant 2H Weapon - Lesser Intellect. Köp bara material till nästa färgintervall.</p>
+                    </div>
+                    <div class="p-4 bg-slate-900/80 border border-slate-800 rounded-lg">
+                        <h3 class="font-bold text-fel text-sm mb-2">Karaktär 20–34 · Expert, skill cap 225</h3>
+                        <p class="text-xs text-slate-300"><strong>Rank:</strong> vid level 20 och skill 125 träna Expert. Tailoring Horde-tränaren Josef Gregorian finns i Undercity; Enchanting-tränare med cap 225 finns bland annat i Stonetalon Mountains.</p>
+                        <p class="text-xs text-slate-300 mt-2"><strong>Tailoring:</strong> 150–170 Crimson Silk Vest, 170–190 Crimson Silk Pantaloons, 190–215 Black Mageweave Gloves och 215–225 Mageweave Bag. För Warlock: sök Filigreed Shadow Gown-mönstret från Lord Cobrahn i Wailing Caverns (75 Tailoring).</p>
+                        <p class="text-xs text-slate-300 mt-2"><strong>Enchanting:</strong> 150–151 Runed Golden Rod, 151–165 Minor Mana Oil, 165–185 Enchant Boots - Lesser Agility, 185–200 Enchant Bracer - Strength, 200–201 Runed Truesilver Rod, 201–220 Lesser Wizard Oil och 220–225 Greater Defense på cloak.</p>
+                    </div>
+                    <div class="p-4 bg-slate-900/80 border border-slate-800 rounded-lg">
+                        <h3 class="font-bold text-fel text-sm mb-2">Karaktär 35–60 · Artisan, skill cap 300</h3>
+                        <p class="text-xs text-slate-300"><strong>Rank:</strong> vid level 35 och skill 200 träna Artisan. Tailoring Horde-tränaren Daryl Stack finns i Tarren Mill; Artisan Enchanting-tränaren Annora finns inne i Uldaman.</p>
+                        <p class="text-xs text-slate-300 mt-2"><strong>Tailoring:</strong> 225–250 Black Mageweave Vest, 250–265 Gilded Sandals om Merchant's Favor/materialen är värda kostnaden, 265–267 Runecloth Cloak, 267–295 Runecloth Cuffs och 295–300 Venomspew Footpads. Skill-ups efter 225 varierar med receptfärg.</p>
+                        <p class="text-xs text-slate-300 mt-2"><strong>Enchanting:</strong> 225–266 Enchant Gloves - Agility, 266–277 Enchant Chest - Superior Stamina och 277–300 Enchant Shield - Greater Stamina. Disenchant bara föremål som inte är värda att sälja eller bära.</p>
+                    </div>
+                </div>
+                <p class="text-[11px] text-amber-200/80 mt-4">Horde-notis: Tailoring/Enchanting Merchant's Favor-mönster säljs i campen nära Crossroads. Fyll Waylaid Supply Crates. Kontrollera skill, receptfärg, bind-status och materialpris i spelet före större köp.</p>
+            </div>
+
+            <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg">
+                <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-3 border-b border-borderbg pb-3 mb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-100 gold-header">Material och egen progress</h2>
+                        <p id="profession-progress-summary" class="text-xs text-slate-400 mt-1" role="status" aria-live="polite">Progress sparas lokalt i den här webbläsaren.</p>
+                    </div>
+                    <div class="flex flex-wrap items-end gap-3">
+                        <label class="text-xs text-slate-400 flex flex-col gap-1">Tailoring skill
+                            <input id="tailoring-skill" data-profession-skill="tailoring" type="number" min="0" max="300" value="0" class="w-24 bg-slate-900 border border-borderbg rounded px-2 py-1 text-slate-100">
+                        </label>
+                        <label class="text-xs text-slate-400 flex flex-col gap-1">Enchanting skill
+                            <input id="enchanting-skill" data-profession-skill="enchanting" type="number" min="0" max="300" value="0" class="w-24 bg-slate-900 border border-borderbg rounded px-2 py-1 text-slate-100">
+                        </label>
+                        <button id="reset-profession-progress" type="button" title="Nollställ profession-progress" aria-label="Nollställ profession-progress" class="w-8 h-8 inline-flex items-center justify-center bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded text-slate-300"><i class="fa-solid fa-rotate-left"></i></button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-bold text-fel text-sm mb-2">Tailoring · inköp och mål</h3>
+                        <div class="space-y-2 text-xs">
+                            <label class="flex items-start gap-2 p-2.5 bg-slate-900/80 border border-slate-800 rounded"><input type="checkbox" data-profession-task="tailoring-linen" class="mt-0.5 accent-fel"><span><strong>Skill 1–75:</strong> cirka 65 Linen Cloth, 135 Wool Cloth och Coarse Thread för Linen Belt; håll kvar extra tyg om du samlar vidare.</span></label>
+                            <label class="flex items-start gap-2 p-2.5 bg-slate-900/80 border border-slate-800 rounded"><input type="checkbox" data-profession-task="tailoring-silk" class="mt-0.5 accent-fel"><span><strong>Skill 75–150:</strong> cirka 312 Wool Cloth till Gloves of Meditation, upp till 20 Elixir of Wisdom, 160 Silk Cloth och 85 Mageweave Cloth; mängder varierar med receptfärg.</span></label>
+                            <label class="flex items-start gap-2 p-2.5 bg-slate-900/80 border border-slate-800 rounded"><input type="checkbox" data-profession-task="tailoring-shadow" class="mt-0.5 accent-fel"><span><strong>Shadow gear:</strong> samla Merchant's Favor från Waylaid Supply Crates. Shadow-mönstren kostar 30 Favor styck, är BoP och säljs av Jim'bek nära Crossroads.</span></label>
+                            <label class="flex items-start gap-2 p-2.5 bg-slate-900/80 border border-slate-800 rounded"><input type="checkbox" data-profession-task="tailoring-mageweave" class="mt-0.5 accent-fel"><span><strong>Skill 150–225:</strong> ungefär 544 Silk Cloth och 900 Mageweave Cloth enligt en föreslagen Forever-rutt, plus dyes/thread. Kolla AH-pris innan du binder upp guldet.</span></label>
+                            <label class="flex items-start gap-2 p-2.5 bg-slate-900/80 border border-slate-800 rounded"><input type="checkbox" data-profession-task="tailoring-runecloth" class="mt-0.5 accent-fel"><span><strong>Skill 225–300:</strong> Bolt of Runecloth, Rune Thread, Mageweave och receptspecifika reagents. Köp stegvis; senare recept och craftantal kan ändras.</span></label>
+                            <label class="flex items-start gap-2 p-2.5 bg-slate-900/80 border border-slate-800 rounded"><input type="checkbox" data-profession-task="tailoring-soulbag" class="mt-0.5 accent-fel"><span><strong>Warlock-nytta:</strong> bevaka Soul Pouch (24 shards), Felcloth Bag (32 slots) och senare Felblood Soul Bag (30 slots). Tailoring camp: Faction Banner skill 20, Spinning Wheel 140, Loom 300.</span></label>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-amber-300 text-sm mb-2">Enchanting · reagents och mål</h3>
+                        <div class="space-y-2 text-xs">
+                            <label class="flex items-start gap-2 p-2.5 bg-slate-900/80 border border-slate-800 rounded"><input type="checkbox" data-profession-task="enchanting-apprentice" class="mt-0.5 accent-fel"><span><strong>Skill 1–75:</strong> Copper Rod, Mote of Magic, Lesser Magic Essence och Strange Dust. Route: Runed Copper Rod, Inferior Stamina, Minor Deflect, Minor Absorption.</span></label>
+                            <label class="flex items-start gap-2 p-2.5 bg-slate-900/80 border border-slate-800 rounded"><input type="checkbox" data-profession-task="enchanting-journeyman" class="mt-0.5 accent-fel"><span><strong>Skill 75–150:</strong> Lesser Magic Essence, Strange Dust, Lesser Astral Essence och rod-reagents. Lär Runed Silver Rod vid 109–110; lesser Intellect är en vanlig fortsättning.</span></label>
+                            <label class="flex items-start gap-2 p-2.5 bg-slate-900/80 border border-slate-800 rounded"><input type="checkbox" data-profession-task="enchanting-expert" class="mt-0.5 accent-fel"><span><strong>Skill 150–225:</strong> Soul Dust, Vision Dust, Greater Astral/Mystic Essence, Maple/Stranglethorn Seeds, Leaded Vials och rod-material. Runed Golden Rod och Truesilver Rod är ranksteg.</span></label>
+                            <label class="flex items-start gap-2 p-2.5 bg-slate-900/80 border border-slate-800 rounded"><input type="checkbox" data-profession-task="enchanting-artisan" class="mt-0.5 accent-fel"><span><strong>Skill 225–300:</strong> Vision/Dream/Illusion Dust, Greater/Lesser Eternal Essence, shards och rod-material. Disenchant svaga greens; jämför alltid med AH-värde först.</span></label>
+                            <label class="flex items-start gap-2 p-2.5 bg-slate-900/80 border border-slate-800 rounded"><input type="checkbox" data-profession-task="enchanting-favor" class="mt-0.5 accent-fel"><span><strong>Merchant's Favor:</strong> fyll Waylaid Supply Crates. Enchanting-vendorn Beneris finns i campen nära Crossroads; Shadow Spell Power-necklace-mönster kräver högre skill/Favor.</span></label>
+                            <label class="flex items-start gap-2 p-2.5 bg-slate-900/80 border border-slate-800 rounded"><input type="checkbox" data-profession-task="enchanting-camp" class="mt-0.5 accent-fel"><span><strong>Campnytta:</strong> Enchanted Lute skill 20, Arcane Salvager 140, Arcane Forge 300. Jämför crafted item, disenchant-material och AH-pris innan du förstör ett plagg.</span></label>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-4">Materialmängder är uppskattningar från Forever-receptvägar, inte exakta garantier. Skillvärden och kryssrutor sparas bara i localStorage på den här enheten; inget skickas till nätet.</p>
+            </div>
+        </section>
+
+        <!-- TAB 5: WOW FOREVER PREP -->
+        <section id="tab-prep" class="tab-content hidden space-y-6">
+            <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg">
+                <div class="flex items-center justify-between mb-2">
+                    <h2 class="text-xl font-bold text-amber-400 flex items-center gap-2">
+                        <i class="fa-solid fa-rocket"></i> WoW Forever Launch & Zone Route
+                    </h2>
+                </div>
+                <div id="zone-route-container" class="space-y-3 mt-4"></div>
+            </div>
+        </section>
+
+        <!-- TAB 6: MACROS & TIPS -->
+        <section id="tab-macros" class="tab-content hidden space-y-6">
+            <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg">
+                <h2 class="text-xl font-bold text-slate-100 gold-header mb-1">Warlock Makron & Undead Levling-Tips</h2>
+                <div id="macros-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Meta Scanner Interactive Modal -->
+    <div id="meta-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-cardbg border border-amber-500/50 rounded-2xl max-w-xl w-full p-6 shadow-2xl relative">
+            <button onclick="closeMetaScanner()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="flex items-center gap-3 mb-4 border-b border-borderbg pb-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-amber-400 text-xl">
+                    <i class="fa-solid fa-radar"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-slate-100 gold-header">Meta-källor för WoW Forever</h3>
+                    <p class="text-xs text-slate-400">Vald guide-level: <span id="scanner-modal-lvl" class="text-fel font-bold">60</span></p>
+                </div>
+            </div>
+
+            <div id="scanner-modal-content" class="space-y-3 text-xs text-slate-300 max-h-[60vh] overflow-y-auto pr-1"></div>
+
+            <div class="mt-5 pt-3 border-t border-borderbg flex justify-end">
+                <button onclick="closeMetaScanner()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs transition">
+                    Stäng Analys
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Engine JavaScript -->
+    <script>
+        const state = {
+            level: 60,
+            activeTab: 'tab-spells',
+            searchQuery: '',
+            talents: { affliction: {}, demonology: {} }
+        };
+
+        const phaseData = [
+            { maxLvl: 10, title: 'Forever leveling 1–10: DoTs och wand', desc: 'Corruption kommer vid 4, Life Tap vid 6 och Bane of Agony vid 8. Bane är separat från Curse. Stoppa och stå still en halv sekund innan du skjuter wand.' },
+            { maxLvl: 19, title: 'Forever leveling 10–19: Voidwalker', desc: 'Hämta Voidwalker vid 10 och låt den bygga threat före dina DoTs. Med Improved Corruption 5/5 blir Corruption instant vid 14. Drain Life lärs också vid 14.' },
+            { maxLvl: 29, title: 'Forever leveling 20–29: Pandemic', desc: 'Pandemic blir tillgänglig genom talangpoäng från 20. Bane of Agony kan ligga samtidigt som en Curse; Curse of the Elements lärs vid 20 och är användbar på längre fighter.' },
+            { maxLvl: 39, title: 'Forever leveling 30–39: Affliction och demon-utility', desc: 'Siphon Life blir tillgänglig vid 30 poäng/level 30. Felhunter summoneras vid 30, Devour Magic finns då och Spell Lock kommer vid 36. Spellstone är en vapen-imbue från 36.' },
+            { maxLvl: 49, title: 'Forever leveling 40–49: Wrack och Felsteed', desc: 'Wrack låses upp med 31 Affliction-poäng vid level 40 och är en 6 sekunders channel, inte en instant filler. Felsteed är level-40-mounten. Death Coil lärs vid 42.' },
+            { maxLvl: 60, title: 'Forever leveling 50–60: senare milstolpar', desc: 'Inferno kommer vid 50. Bane of Doom, Portal of Summoning och Dreadsteed lärs vid 60. Högre level-builds bör verifieras i spelet; en del publicerad teori är fortfarande oprövad.' }
+        ];
+
+        const spellsDb = [
+            { lvl: 1, name: 'Immolate / Shadow Bolt / Demon Skin', icon: 'fa-fire', desc: 'Startspells. Immolate finns redan vid level 1 i Forever.' },
+            { lvl: 4, name: 'Corruption / Curse of Weakness', icon: 'fa-skull', desc: 'Corruption är en DoT; Weakness är en Curse.' },
+            { lvl: 6, name: 'Life Tap', icon: 'fa-heart-circle-bolt', desc: 'Ger mana motsvarande basvärde plus Spirit; Spirit-skalningen gäller från första ranken.' },
+            { lvl: 8, name: 'Bane of Agony / Fear', icon: 'fa-fire', desc: 'Agony är en Bane, inte en Curse, och kan därför kombineras med en Curse.' },
+            { lvl: 10, name: 'Voidwalker Quest / Drain Soul / Healthstone', icon: 'fa-ghost', desc: 'Drain Soul ger alltid en shard om målet dör under channelen; shard-chansen från skadeticks sänktes i senaste notiserna.' },
+            { lvl: 12, name: 'Health Funnel', icon: 'fa-notes-medical', desc: 'Läker din demon.' },
+            { lvl: 14, name: 'Drain Life / Curse of Recklessness', icon: 'fa-hand-holding-hand', desc: 'Drain Life är en 5 sekunders channel. Recklessness hindrar målet från att fly och motverkar Fear.' },
+            { lvl: 16, name: 'Unending Breath', icon: 'fa-water', desc: 'Forever ranknivå.' },
+            { lvl: 18, name: 'Soulstone / Searing Pain / Gravestone Scepter', icon: 'fa-gem', desc: 'Gravestone Scepter från Blackfathom Villainy är en relevant wand från cirka level 18.' },
+            { lvl: 20, name: 'Curse of the Elements / Demon Armor / Succubus / Incubus', icon: 'fa-shield-cat', desc: 'Curse of the Elements påverkar alla magiskolor. Sayaad-pet-valen finns från 20.' },
+            { lvl: 20, name: 'Ritual of Summoning', icon: 'fa-users', desc: 'Kräver caster plus två gruppmedlemmar; mötestenar summon inte i Forever.' },
+            { lvl: 22, name: 'Drain Life Rank 2 / Healthstone Rank 2', icon: 'fa-heart-pulse', desc: 'Forever rankmilstolpe.' },
+            { lvl: 24, name: 'Drain Mana / Sense Demons', icon: 'fa-eye', desc: 'Forever rankmilstolpe.' },
+            { lvl: 26, name: 'Curse of Tongues', icon: 'fa-comment-slash', desc: 'Detta är en Curse, inte en Bane.' },
+            { lvl: 28, name: 'Banish / Firestone', icon: 'fa-ban', desc: 'Firestone är en vapen-imbue, inte en off-hand.' },
+            { lvl: 30, name: 'Siphon Life / Felhunter / Hellfire', icon: 'fa-droplet', desc: 'Siphon Life kräver 21 Affliction-poäng. Felhunter får Devour Magic vid 30.' },
+            { lvl: 32, name: 'Shadow Ward / Fear Rank 2', icon: 'fa-shield-halved', desc: 'Forever rankmilstolpe.' },
+            { lvl: 36, name: 'Spellstone / Felhunter Spell Lock', icon: 'fa-wand-sparkles', desc: 'Spellstone är en vapen-imbue; Felhunter-interrupten kommer vid 36, inte 30.' },
+            { lvl: 40, name: 'Wrack / Howl of Terror / Felsteed', icon: 'fa-horse', desc: 'Wrack är en 6 sekunders channel med 31 Affliction-poäng. Felsteed är mounten vid level 40.' },
+            { lvl: 42, name: 'Death Coil', icon: 'fa-skull-crossbones', desc: '3 sekunders horror som även läker dig för skadan.' },
+            { lvl: 48, name: 'Soul Fire', icon: 'fa-fire-flame-curved', desc: 'Kostar en Soul Shard och har lång cast.' },
+            { lvl: 50, name: 'Inferno', icon: 'fa-volcano', desc: 'Kräver Infernal Stone enligt klientdata.' },
+            { lvl: 60, name: 'Bane of Doom / Portal of Summoning / Dreadsteed', icon: 'fa-horse-head', desc: 'Forever-milstolpar; Bane of Doom delar Bane-plats med Agony.' }
+        ];
+
+        const wandDb = [
+            { lvl: 13, name: 'Fang of Magmatus / Dwarven Tome', dps: 'Jämför i spelet', source: 'Forever-dungeon/questspår; verifiera faction och tillgänglighet' },
+            { lvl: 13, name: "Gnarled Necromancer's Staff / Coldspire Staff", dps: 'Jämför i spelet', source: 'Ruins of Lordaeron; kontrollera drop/quest i Forever' },
+            { lvl: 17, name: "Sizzle Stick / Cookie's Stirring Rod", dps: 'Jämför i spelet', source: 'Wailing Caverns / Deadmines quest' },
+            { lvl: 18, name: 'Gravestone Scepter', dps: 'Jämför i spelet', source: 'Blackfathom Villainy quest; båda fraktioner' },
+            { lvl: 20, name: 'Orb or Staff of Soran\'ruk', dps: 'Jämför i spelet', source: 'Warlock class quest; Forever-version' }
+        ];
+
+        const classQuestsDb = [
+            { lvl: 10, title: 'Voidwalker class quest', zone: 'Undercity / Orgrimmar', reward: 'Summon Voidwalker', desc: 'Horde-kedjan slutar hos Carendin Halgar i Undercity; följ questloggen från level 10.' },
+            { lvl: 20, title: 'Succubus / Incubus', zone: 'Faction quests', reward: 'Sayaad-pet + Small Soul Pouch', desc: 'Classic Succubus-kedjan finns kvar; Forever har även nya Incubus-kedjor. Exakt kedja beror på fraktion.' },
+            { lvl: 20, title: 'Orb of Soran\'ruk', zone: 'Warlock class quest', reward: 'Orb or Staff of Soran\'ruk', desc: 'Forever questkedja med vapenval; XP-belöningen ändrades från Classic.' },
+            { lvl: 30, title: 'Felhunter class quest', zone: 'Ratchet', reward: 'Summon Felhunter', desc: 'Classic-kedjan finns i questdata, men om den fortfarande krävs bör verifieras i spelet.' },
+            { lvl: 40, title: 'Felsteed', zone: 'Strahad Farsan', reward: 'Summon Felsteed', desc: 'Level-40 mount. Följ aktuell trainer/quest i spelet; kostnads- och questdetaljer kan skilja sig.' },
+            { lvl: 60, title: 'Dreadsteed of Xoroth', zone: 'Class quest chain', reward: 'Summon Dreadsteed', desc: 'Level-60 questkedja. Förväxla inte med en Soul Harvester-vapenquest.' }
+        ];
+
+        const zoneRouteDb = [
+            { range: 'L1 - L10', title: 'Deathknell & Tirisfal Glades', desc: 'Gör startkedjan och ta Imp-questen. Voidwalker-questen blir aktuell vid 10.' },
+            { range: 'L10 - L19', title: 'Silverpine Forest / The Barrens', desc: 'Hämta Voidwalker. Barrens är Horde 10–25; wand och DoTs hjälper mot downtime.' },
+            { range: 'L20 - L29', title: 'Hillsbrad Foothills / Ashenvale', desc: 'Pandemic och nya Forever-dungeon/questalternativ ändrar Classic-rutten. Följ levelspann och questlogg.' },
+            { range: 'L30 - L35', title: 'Arathi / Stranglethorn Vale', desc: 'Siphon Life vid 30-poängsmilstolpen. Felhunter är utility; Spell Lock först vid 36.' },
+            { range: 'L36 - L44', title: 'Riverglades (contested) / Dustwallow / Badlands', desc: 'Riverglades är en ny contested-zon med klientspann 36–44. Quests och fiendenivåer kan skilja sig; kontrollera i spelet.' },
+            { range: 'L40 - L50', title: 'Tanaris / Hinterlands / Feralas', desc: 'Felsteed vid 40; Wrack är en channel. Välj mellan zoner utifrån quests och faktisk XP.' },
+            { range: 'L50 - L60', title: 'Felwood / Plaguelands / Winterspring / Silithus', desc: 'Inferno vid 50; Bane of Doom och Portal of Summoning vid 60. Ingen bekräftad Soul Harvester-scythe-quest.' }
+        ];
+
+        const macrosDb = [
+            { title: 'Pet Attack + Corruption', badge: 'Pull', desc: 'Skickar in pet och kastar Corruption.', code: '#showtooltip Corruption\n/petattack\n/cast Corruption' },
+            { title: 'Mouseover Bane of Agony', badge: 'Multi-DoT', desc: 'Kastar Agony på muspekarens mål.', code: '#showtooltip Bane of Agony\n/cast [@mouseover,harm,nodead][] Bane of Agony' },
+            { title: 'Mouseover Curse of Weakness', badge: 'Utility', desc: 'Lägger Curse of Weakness på muspekarens fiende, annars på ditt mål.', code: '#showtooltip Curse of Weakness\n/cast [@mouseover,harm,nodead][] Curse of Weakness' },
+            { title: 'Drain Soul: shard finisher', badge: 'Soul Shards', desc: 'Använd aktuell rank och låt channelen avslutas. Ett icke-trivialt mål som dör under channelen ger alltid en shard; skadeticks ger shard mer sällan efter senaste ändringen.', code: '#showtooltip Drain Soul\n/cast Drain Soul' },
+            { title: 'Health Funnel: Pet', badge: 'Pet Care', desc: 'Läker din aktiva demon med Health Funnel.', code: '#showtooltip Health Funnel\n/cast [@pet,exists,nodead] Health Funnel' },
+            { title: 'Use Healthstone', badge: 'Emergency', desc: 'Använder din Healthstone när den finns i väskan.', code: '#showtooltip Healthstone\n/use Healthstone' },
+            { title: 'Pet Follow', badge: 'Pet Control', desc: 'Kallar tillbaka din demon så att den slutar attackera.', code: '#showtooltip\n/petfollow' }
+        ];
+
+        const talentTreesData = {
+            affliction: [
+                { id: 'imp_corruption', name: 'Improved Corruption', max: 5, reqLvl: 10, reqPoints: 0, desc: 'Minskar cast time för Corruption; 5/5 gör den instant.' },
+                { id: 'suppression', name: 'Suppression', max: 5, reqLvl: 10, reqPoints: 0, desc: 'Ger Affliction-spells upp till 5% hit och minskar threat.' },
+                { id: 'imp_life_tap', name: 'Improved Life Tap', max: 2, reqLvl: 10, reqPoints: 0, desc: 'Forever-talang. Exakt värde följer aktuell tooltip.' },
+                { id: 'grim_reach', name: 'Grim Reach', max: 2, reqLvl: 15, reqPoints: 5, desc: 'Ökar räckvidden för Affliction-spells.' },
+                { id: 'soul_harvest', name: 'Soul Harvest', max: 2, reqLvl: 15, reqPoints: 5, desc: 'Förbättrar manaåterhämtning när Drain Soul är aktivt på ett döende mål.' },
+                { id: 'pandemic', name: 'Pandemic', max: 3, reqLvl: 20, reqPoints: 10, desc: 'Förstärker critical strike-bonusen för DoTs och drains; DoTs kan critta i Forever.' },
+                { id: 'improved_drains', name: 'Improved Drains', max: 3, reqLvl: 20, reqPoints: 10, desc: 'Förbättrar drain-förmågor. Nov 3 ändrades Drain Mana-effekten; talangen ökar inte längre Wrack-skadan.' },
+                { id: 'improved_bane_agony', name: 'Improved Bane of Agony', max: 2, reqLvl: 20, reqPoints: 10, desc: 'Forever-talang som förbättrar Bane of Agony.' },
+                { id: 'amplify_curse', name: 'Amplify Curse', max: 1, reqLvl: 20, reqPoints: 10, desc: 'Förstärker nästa Curse of Weakness eller Bane of Agony; krävs för Curse of Exhaustion.' },
+                { id: 'nightfall', name: 'Nightfall', max: 2, reqLvl: 25, reqPoints: 15, desc: 'Corruption och drains kan ge en instant Shadow Bolt.' },
+                { id: 'malevolence', name: 'Malevolence', max: 5, reqLvl: 25, reqPoints: 15, desc: 'Ökar Shadow critical strike chance.' },
+                { id: 'curse_exhaustion', name: 'Curse of Exhaustion', max: 1, reqLvl: 25, reqPoints: 15, prereqId: 'amplify_curse', prereqRank: 1, desc: 'Affliction-guldtalang; kräver Amplify Curse.' },
+                { id: 'siphon_life', name: 'Siphon Life', max: 1, reqLvl: 30, reqPoints: 20, desc: '21-poängsmilstolpe; DoT som läker dig.' },
+                { id: 'soul_siphon', name: 'Soul Siphon', max: 3, reqLvl: 30, reqPoints: 20, desc: 'Ökar Drain Life/Drain Soul-värde per Affliction-effekt på målet.' },
+                { id: 'fel_concentration', name: 'Fel Concentration', max: 3, reqLvl: 30, reqPoints: 20, desc: 'Forever har 3 ranker, inte 5; minskar cast interruption på drains.' },
+                { id: 'shadow_mastery', name: 'Shadow Mastery', max: 5, reqLvl: 35, reqPoints: 25, desc: 'Ökar Shadow-skada med 2% per poäng, upp till 10%.' },
+                { id: 'wrack', name: 'Wrack', max: 1, reqLvl: 40, reqPoints: 30, prereqId: 'siphon_life', prereqRank: 1, desc: '31-poängsmilstolpe. 6 sekunders channel; ökar andra Shadow-DoTs på målet medan den pågår.' }
+            ],
+            demonology: [
+                { id: 'demonic_embrace', name: 'Demonic Embrace', max: 5, reqLvl: 10, reqPoints: 0, desc: 'Ökar Stamina; minskar Spirit.' },
+                { id: 'improved_voidwalker', name: 'Improved Voidwalker', max: 3, reqLvl: 15, reqPoints: 5, desc: 'Förbättrar Voidwalker.' },
+                { id: 'demonic_energies', name: 'Demonic Energies', max: 2, reqLvl: 15, reqPoints: 5, desc: 'Hjälper till att hålla demonen vid liv genom Warlockens spell damage.' }
+            ]
+        };
+
+        const autoTalentOrder = {
+            affliction: ['imp_corruption', 'suppression', 'pandemic', 'soul_harvest', 'nightfall', 'improved_bane_agony', 'grim_reach', 'siphon_life', 'soul_siphon', 'malevolence', 'shadow_mastery', 'wrack', 'improved_drains', 'imp_life_tap', 'grim_reach', 'amplify_curse'],
+            demonology: ['demonic_embrace', 'demonic_energies', 'improved_voidwalker']
+        };
+
+        function setupProfessionTracker() {
+            const storageKey = 'undead-warlock-professions-v1';
+            const skillInputs = [...document.querySelectorAll('[data-profession-skill]')];
+            const taskInputs = [...document.querySelectorAll('[data-profession-task]')];
+            const summary = document.getElementById('profession-progress-summary');
+            const resetButton = document.getElementById('reset-profession-progress');
+            let saved = {};
+            let storageAvailable = true;
+
+            try {
+                saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+            } catch {
+                saved = {};
+                storageAvailable = false;
+            }
+
+            skillInputs.forEach(input => {
+                const value = Number(saved.skills?.[input.dataset.professionSkill]);
+                input.value = Number.isFinite(value) ? Math.min(300, Math.max(0, value)) : 0;
+            });
+            taskInputs.forEach(input => {
+                input.checked = saved.tasks?.[input.dataset.professionTask] === true;
+            });
+
+            const updateSummary = (isSaved) => {
+                if (!summary) return;
+                const skills = skillInputs.map(input => `${input.dataset.professionSkill === 'tailoring' ? 'Tailoring' : 'Enchanting'} ${input.value}/300`).join(' · ');
+                const completed = taskInputs.filter(input => input.checked).length;
+                summary.textContent = `${skills} · ${completed}/${taskInputs.length} mål klara · ${isSaved ? 'sparat lokalt på enheten' : 'lokal lagring ej tillgänglig'}`;
+            };
+
+            const saveProgress = () => {
+                const progress = {
+                    skills: Object.fromEntries(skillInputs.map(input => [input.dataset.professionSkill, Number(input.value) || 0])),
+                    tasks: Object.fromEntries(taskInputs.map(input => [input.dataset.professionTask, input.checked]))
+                };
+                try {
+                    localStorage.setItem(storageKey, JSON.stringify(progress));
+                    storageAvailable = true;
+                    updateSummary(true);
+                } catch {
+                    storageAvailable = false;
+                    updateSummary(false);
+                }
+            };
+
+            skillInputs.forEach(input => input.addEventListener('input', saveProgress));
+            taskInputs.forEach(input => input.addEventListener('change', saveProgress));
+            if (resetButton) {
+                resetButton.addEventListener('click', () => {
+                    skillInputs.forEach(input => { input.value = 0; });
+                    taskInputs.forEach(input => { input.checked = false; });
+                    saveProgress();
+                });
+            }
+            updateSummary(storageAvailable);
+        }
+
+        function initApp() {
+            setupTabNavigation();
+            setupSliderEvents();
+            setupSearch();
+            setupNetworkStatus();
+            setupProfessionTracker();
+            renderAll();
+        }
+
+        function setupNetworkStatus() {
+            const banner = document.getElementById('offline-banner');
+            if (!banner) return;
+
+            const updateStatus = () => banner.classList.toggle('hidden', navigator.onLine);
+            window.addEventListener('online', updateStatus);
+            window.addEventListener('offline', updateStatus);
+            updateStatus();
+        }
+
+        function setLevel(lvl) {
+            state.level = Math.max(1, Math.min(60, lvl));
+            const slider = document.getElementById('level-slider');
+            if (slider) slider.value = state.level;
+            renderAll();
+        }
+
+        function setupSliderEvents() {
+            const slider = document.getElementById('level-slider');
+            if (slider) {
+                slider.addEventListener('input', (e) => {
+                    state.level = parseInt(e.target.value, 10);
+                    renderAll();
+                });
+            }
+        }
+
+        function setupTabNavigation() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => {
+                        t.classList.remove('active-tab', 'border-fel', 'text-fel');
+                        t.classList.add('border-transparent', 'text-slate-400');
+                    });
+                    tab.classList.add('active-tab', 'border-fel', 'text-fel');
+                    tab.classList.remove('border-transparent', 'text-slate-400');
+
+                    const targetTabId = tab.getAttribute('data-tab');
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                    const content = document.getElementById(targetTabId);
+                    if (content) content.classList.remove('hidden');
+                });
+            });
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('global-search');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    state.searchQuery = e.target.value.toLowerCase().trim();
+                    renderSpells();
+                    renderQuests();
+                    renderMacros();
+                    renderWands();
+                });
+            }
+        }
+
+        function renderAll() {
+            const lvlDisplay = document.getElementById('current-level-display');
+            if (lvlDisplay) lvlDisplay.innerText = state.level;
+            
+            renderPhaseAndRotation();
+            renderSpells();
+            renderTalents();
+            renderWands();
+            renderQuests();
+            renderZoneRoute();
+            renderMacros();
+        }
+
+        function renderPhaseAndRotation() {
+            const phase = phaseData.find(p => state.level <= p.maxLvl) || phaseData[phaseData.length - 1];
+            const pTitle = document.getElementById('phase-title');
+            const pDesc = document.getElementById('phase-description');
+            if (pTitle) pTitle.innerText = phase.title;
+            if (pDesc) pDesc.innerText = phase.desc;
+            
+            const rTag = document.getElementById('rotation-lvl-tag');
+            if (rTag) rTag.innerText = `Level ${state.level}`;
+
+            const rotationContainer = document.getElementById('rotation-steps');
+            if (!rotationContainer) return;
+
+            let steps = [];
+            if (state.level < 10) {
+                steps = [
+                    { step: '1', title: 'Imp först', desc: 'Låt pet börja attackera och bygga threat.' },
+                    { step: '2', title: 'Corruption', desc: state.level >= 4 ? 'Lägg DoT; den är inte instant utan 5/5 Improved Corruption.' : 'Lärs vid level 4.' },
+                    { step: '3', title: 'Bane of Agony', desc: state.level >= 8 ? 'Lägg på mål som lever länge; Bane delar inte Curse-platsen.' : 'Lärs vid level 8.' },
+                    { step: '4', title: 'Wand / Shadow Bolt', desc: 'Wand skalar inte med spell power i Forever. Stå still 0,5 s före skott.' }
+                ];
+            } else if (state.level < 20) {
+                steps = [
+                    { step: '1', title: 'Voidwalker först', desc: 'Låt den få threat innan DoTs.' },
+                    { step: '2', title: 'Bane of Agony', desc: 'Bane kan ligga samtidigt som en Curse.' },
+                    { step: '3', title: 'Corruption', desc: state.level >= 14 ? 'Instant med 5/5 Improved Corruption.' : 'Har cast time tills 5/5 Improved Corruption.' },
+                    { step: '4', title: 'Wand / Drain Life', desc: 'Stå still före wand; använd Drain Life när du behöver hälsa.' }
+                ];
+            } else if (state.level < 30) {
+                steps = [
+                    { step: '1', title: 'Pet attack', desc: 'Låt Voidwalker bygga threat.' },
+                    { step: '2', title: 'Bane + Curse', desc: 'Bane of Agony plus Curse of the Elements på långlivade mål.' },
+                    { step: '3', title: 'Corruption / Pandemic', desc: 'Håll DoTs uppe; Pandemic förstärker DoT-critten.' },
+                    { step: '4', title: 'Drain Life / wand', desc: 'Drain Life när du behöver heal; Life Tap främst mellan pulls.' }
+                ];
+            } else if (state.level < 40) {
+                steps = [
+                    { step: '1', title: 'Pet först', desc: 'Voidwalker för säkerhet; Felhunter för utility, Spell Lock efter level 36.' },
+                    { step: '2', title: 'Bane + Curse', desc: 'Agony samtidigt som en vald utility Curse.' },
+                    { step: '3', title: 'Siphon Life', desc: 'Lägg på mål som lever länge; låses upp vid 21 Affliction-poäng.' },
+                    { step: '4', title: 'Drain / wand', desc: 'Soul Siphon belönar flera Affliction-effekter före drain.' }
+                ];
+            } else {
+                steps = [
+                    { step: '1', title: 'Voidwalker + DoTs', desc: 'Låt pet börja; Bane och Curse kan samexistera.' },
+                    { step: '2', title: 'Siphon Life', desc: 'Håll uppe på mål som överlever DoT-tiden.' },
+                    { step: '3', title: 'Wrack', desc: '6 s channel, inte instant. Använd när DoTs kan ticka igenom den.' },
+                    { step: '4', title: 'Drain Soul / Life Tap', desc: 'Drain Soul sist på shard-värda mål; Life Tap mellan pulls. Wrack-rotation är delvis oprövad.' }
+                ];
+            }
+
+            rotationContainer.innerHTML = steps.map(s => `
+                <div class="p-3 bg-slate-900/90 rounded-lg border border-purple-900/30 flex items-start gap-3">
+                    <span class="w-6 h-6 rounded-full bg-fel/20 text-fel font-bold text-xs flex items-center justify-center border border-fel/40 flex-shrink-0">${s.step}</span>
+                    <div>
+                        <div class="text-xs font-bold text-slate-100">${s.title}</div>
+                        <div class="text-[11px] text-slate-400 mt-0.5">${s.desc}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderSpells() {
+            const grid = document.getElementById('spells-grid');
+            if (!grid) return;
+
+            const available = spellsDb.filter(s => s.lvl <= state.level && 
+                (state.searchQuery === '' || s.name.toLowerCase().includes(state.searchQuery) || s.desc.toLowerCase().includes(state.searchQuery)));
+
+            const countElem = document.getElementById('spell-count');
+            if (countElem) countElem.innerText = `${available.length} spellmilestones visade`;
+
+            grid.innerHTML = available.map(s => `
+                <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex items-start gap-3">
+                    <div class="w-9 h-9 rounded bg-purple-950 text-purple-400 flex items-center justify-center text-base border border-purple-800/50 flex-shrink-0">
+                        <i class="fa-solid ${s.icon}"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-slate-200 flex items-center justify-between">
+                            <span>${s.name}</span>
+                            <span class="text-[10px] bg-slate-800 text-fel px-1.5 py-0.5 rounded font-mono">Lvl ${s.lvl}</span>
+                        </div>
+                        <div class="text-[11px] text-slate-400 mt-0.5">${s.desc}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getTalentTreePoints(treeKey) {
+            return Object.values(state.talents[treeKey] || {}).reduce((total, rank) => total + rank, 0);
+        }
+
+        function getTotalTalentPoints() {
+            return getTalentTreePoints('affliction') + getTalentTreePoints('demonology');
+        }
+
+        function getRequiredTreePoints(talent) {
+            return talent.reqPoints ?? Math.max(0, Math.floor((talent.reqLvl - 10) / 5) * 5);
+        }
+
+        function canIncreaseTalent(treeKey, talent) {
+            const prerequisiteRank = talent.prereqId ? (state.talents[treeKey]?.[talent.prereqId] || 0) : (talent.prereqRank || 0);
+            const prerequisiteMet = !talent.prereqId || prerequisiteRank >= (talent.prereqRank || 1);
+            return state.level >= talent.reqLvl &&
+                getTotalTalentPoints() < Math.max(0, state.level - 9) &&
+                getTalentTreePoints(treeKey) >= getRequiredTreePoints(talent) &&
+                prerequisiteMet &&
+                (state.talents[treeKey]?.[talent.id] || 0) < talent.max;
+        }
+
+        function canDecreaseTalent(treeKey, talent) {
+            const currentRank = state.talents[treeKey]?.[talent.id] || 0;
+            if (currentRank === 0) return false;
+
+            const remainingTreePoints = getTalentTreePoints(treeKey) - 1;
+            return talentTreesData[treeKey].every(candidate => {
+                const candidateRank = (state.talents[treeKey]?.[candidate.id] || 0) - (candidate.id === talent.id ? 1 : 0);
+                if (candidateRank <= 0) return true;
+                if (remainingTreePoints < getRequiredTreePoints(candidate)) return false;
+                if (candidate.prereqId === talent.id && currentRank - 1 < (candidate.prereqRank || 1)) return false;
+                return true;
+            });
+        }
+
+        function renderTalents() {
+            const maxPoints = Math.max(0, state.level - 9);
+            const ptsElem = document.getElementById('talent-points-available');
+            if (ptsElem) ptsElem.innerText = `${maxPoints - getTotalTalentPoints()} poäng återstår av ${maxPoints}`;
+
+            let affSpent = 0;
+            let demSpent = 0;
+
+            const renderTree = (treeKey, containerId) => {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                const talents = talentTreesData[treeKey];
+
+                container.innerHTML = talents.map(t => {
+                    const currentRank = state.talents[treeKey]?.[t.id] || 0;
+                    if (treeKey === 'affliction') affSpent += currentRank;
+                    if (treeKey === 'demonology') demSpent += currentRank;
+
+                    const prerequisiteRank = t.prereqId ? (state.talents[treeKey]?.[t.prereqId] || 0) : (t.prereqRank || 0);
+                    const prerequisiteMet = !t.prereqId || prerequisiteRank >= (t.prereqRank || 1);
+                    const isAvailable = state.level >= t.reqLvl && getTalentTreePoints(treeKey) >= getRequiredTreePoints(t) && prerequisiteMet;
+                    const canIncrease = canIncreaseTalent(treeKey, t);
+
+                    return `
+                        <div class="p-2.5 rounded-lg border ${isAvailable ? 'bg-slate-900/90 border-slate-800' : 'bg-slate-950/40 border-slate-900 opacity-50'} flex items-center justify-between gap-2">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-bold text-slate-200">${t.name}</span>
+                                    <span class="text-[10px] text-slate-500 font-mono">Req Lvl ${t.reqLvl}</span>
+                                </div>
+                                <div class="text-[11px] text-slate-400 mt-0.5">${t.desc}</div>
+                            </div>
+                            <div class="flex items-center gap-1.5 flex-shrink-0">
+                                <button onclick="changeTalent('${treeKey}', '${t.id}', -1)" ${canDecreaseTalent(treeKey, t) ? '' : 'disabled'} aria-label="Ta bort poäng från ${t.name}" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-300 text-xs font-bold flex items-center justify-center border border-slate-700">-</button>
+                                <span class="text-xs font-mono font-bold text-fel px-1">${currentRank}/${t.max}</span>
+                                <button onclick="changeTalent('${treeKey}', '${t.id}', 1)" ${canIncrease ? '' : 'disabled'} aria-label="Lägg poäng i ${t.name}" class="w-6 h-6 rounded bg-purple-900 hover:bg-purple-800 disabled:opacity-40 disabled:cursor-not-allowed text-purple-200 text-xs font-bold flex items-center justify-center border border-purple-700">+</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            };
+
+            renderTree('affliction', 'affliction-talents');
+            renderTree('demonology', 'demonology-talents');
+
+            const affSpentElem = document.getElementById('affliction-spent');
+            const demSpentElem = document.getElementById('demonology-spent');
+            if (affSpentElem) affSpentElem.innerText = `${affSpent} Poäng`;
+            if (demSpentElem) demSpentElem.innerText = `${demSpent} Poäng`;
+        }
+
+        function changeTalent(treeKey, id, delta) {
+            if (!state.talents[treeKey]) state.talents[treeKey] = {};
+            const current = state.talents[treeKey][id] || 0;
+            const treeTalent = talentTreesData[treeKey].find(t => t.id === id);
+
+            if (delta > 0 && canIncreaseTalent(treeKey, treeTalent)) {
+                state.talents[treeKey][id] = current + 1;
+            } else if (delta < 0 && current > 0 && canDecreaseTalent(treeKey, treeTalent)) {
+                state.talents[treeKey][id] = current - 1;
+            }
+            renderTalents();
+        }
+
+        function autoAllocateTalents() {
+            state.talents = { affliction: {}, demonology: {} };
+            ['affliction', 'demonology'].forEach(treeKey => {
+                autoTalentOrder[treeKey].forEach(talentId => {
+                    const talent = talentTreesData[treeKey].find(item => item.id === talentId);
+                    if (!talent) return;
+                    while (canIncreaseTalent(treeKey, talent)) {
+                        state.talents[treeKey][talentId] = (state.talents[treeKey][talentId] || 0) + 1;
+                    }
+                });
+            });
+            renderTalents();
+        }
+
+        function resetTalents() {
+            state.talents = { affliction: {}, demonology: {} };
+            renderTalents();
+        }
+
+        function renderWands() {
+            const list = document.getElementById('wand-list');
+            if (!list) return;
+
+            const filtered = wandDb.filter(w => state.searchQuery === '' ||
+                [w.name, w.source, w.dps, String(w.lvl)].some(value => value.toLowerCase().includes(state.searchQuery)));
+
+            list.innerHTML = filtered.map(w => `
+                <div class="p-2.5 rounded-lg border ${state.level >= w.lvl ? 'bg-purple-950/20 border-fel/40' : 'bg-slate-900/40 border-slate-800 opacity-60'} flex items-center justify-between text-xs">
+                    <div>
+                        <span class="font-bold text-slate-200">${w.name}</span>
+                        <span class="text-[10px] text-slate-400 block">${w.source}</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-mono font-bold text-fel">${w.dps}</span>
+                        <span class="text-[10px] text-slate-500 block">Lvl ${w.lvl}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderQuests() {
+            const container = document.getElementById('quests-container');
+            if (!container) return;
+
+            const qFilter = document.getElementById('quest-filter-lvl');
+            if (qFilter) qFilter.innerText = `Filtered for Level ${state.level}`;
+
+            const filtered = classQuestsDb.filter(q => q.lvl <= state.level &&
+                (state.searchQuery === '' || [q.title, q.zone, q.reward, q.desc].some(value => value.toLowerCase().includes(state.searchQuery))));
+            container.innerHTML = filtered.map(q => `
+                <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-xs font-bold text-amber-300">${q.title}</h4>
+                        <div class="text-[11px] text-slate-400 mt-1">${q.desc}</div>
+                    </div>
+                    <div class="mt-3 text-[10px] text-fel font-bold">${q.reward}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderZoneRoute() {
+            const container = document.getElementById('zone-route-container');
+            if (!container) return;
+
+            container.innerHTML = zoneRouteDb.map((z, idx) => `
+                <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex items-center justify-between text-xs">
+                    <div>
+                        <span class="font-bold text-slate-200">${z.range}: ${z.title}</span>
+                        <p class="text-slate-400 mt-0.5 text-[11px]">${z.desc}</p>
+                    </div>
+                    <span class="text-[10px] text-fel font-mono uppercase bg-fel/10 px-2 py-0.5 rounded">Fas ${idx + 1}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderMacros() {
+            const grid = document.getElementById('macros-grid');
+            if (!grid) return;
+
+            const filtered = macrosDb.filter(m => state.searchQuery === '' ||
+                [m.title, m.badge, m.desc, m.code].some(value => value.toLowerCase().includes(state.searchQuery)));
+
+            grid.innerHTML = filtered.map(m => `
+                <div class="bg-cardbg border border-borderbg rounded-xl p-4 shadow-md text-xs">
+                    <h4 class="font-bold text-slate-100 mb-1">${m.title}</h4>
+                    <p class="text-slate-400 mb-2 text-[11px]">${m.desc}</p>
+                    <pre class="bg-slate-950 p-2.5 rounded font-mono text-fel overflow-x-auto text-[11px]">${m.code}</pre>
+                </div>
+            `).join('');
+        }
+
+        function openMetaScanner() {
+            const modal = document.getElementById('meta-modal');
+            const lvl = state.level;
+            const modalLvl = document.getElementById('scanner-modal-lvl');
+            if (modalLvl) modalLvl.innerText = lvl;
+
+            const content = document.getElementById('scanner-modal-content');
+            if (content) {
+                content.innerHTML = `
+                    <div class="p-3 bg-slate-900 rounded-lg border border-amber-500/50">
+                        <div class="font-bold text-amber-300 text-sm mb-1"><i class="fa-solid fa-circle-info"></i> Ingen live-meta är ansluten</div>
+                        <p class="text-slate-300">Den här sidan hämtar inte builds, rankingar eller patchdata från WoW Forever. Level ${lvl} visar bara vilken nivå som är vald i den statiska leveling-guiden.</p>
+                    </div>
+                    <div class="p-3 bg-slate-900/90 rounded border border-slate-700">
+                        <div class="font-bold text-slate-200">Guidens data</div>
+                        <p class="text-slate-400 mt-1">Spells, talanger, rotationer och utrustningsförslag är lokalt hårdkodade och verifieras inte mot aktuell serverversion. Ingen automatisk uppdatering körs.</p>
+                    </div>
+                    <div class="p-3 bg-slate-900/90 rounded border border-slate-700">
+                        <div class="font-bold text-slate-200">Integritet</div>
+                        <p class="text-slate-400 mt-1">Guidens resurser laddas från filer bredvid HTML-filen. Sidan gör inga automatiska anslutningar till externa tjänster och skickar inte karaktärsdata.</p>
+                    </div>
+                `;
+            }
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeMetaScanner() {
+            const modal = document.getElementById('meta-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        window.onload = initApp;
+    </script>
 </body>
 </html>
