@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undead Warlock Dynamic Leveling 1-60 | WoW Classic</title>
+    <title>Undead Warlock 1–60 Guide | WoW Forever</title>
     <!-- Tailwind CSS -->
     <script src="assets/tailwind.js"></script>
     <script>
@@ -47,7 +47,6 @@
             font-family: system-ui, sans-serif;
             background-color: #0a0910;
             color: #e2e8f0;
-            user-select: none;
         }
         ::-webkit-scrollbar {
             width: 8px;
@@ -108,7 +107,7 @@
                             <h1 class="font-extrabold text-lg sm:text-xl text-slate-100 leading-tight flex items-center gap-2">
                                 Undead Warlock <span class="text-xs px-2 py-0.5 rounded bg-horde/40 text-red-300 border border-horde/50">1-60 Guide</span>
                             </h1>
-                            <p class="text-xs text-slate-400">WoW Classic / Hardcore / Forever • Statisk guide</p>
+                            <p class="text-xs text-slate-400">WoW Forever • Svensk klass- och levelingguide</p>
                         </div>
                     </div>
                 </div>
@@ -116,7 +115,7 @@
                 <!-- Global Search & Meta Scanner Button -->
                 <div class="flex items-center gap-3">
                     <button onclick="openMetaScanner()" class="bg-gradient-to-r from-amber-600 to-fel hover:from-amber-500 hover:to-fel-glow text-slate-950 font-bold text-xs px-3.5 py-2 rounded-lg border border-amber-400/50 shadow-md transition flex items-center gap-1.5 cursor-pointer">
-                        <i class="fa-solid fa-arrow-up-right-from-square text-slate-950"></i> Meta-källor
+                        <i class="fa-solid fa-arrow-up-right-from-square text-slate-950"></i> Källor & status
                     </button>
                     <div class="relative flex-1 md:w-64">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
@@ -171,7 +170,10 @@
     <!-- Navigation Tabs -->
     <nav class="bg-cardbg border-b border-borderbg overflow-x-auto">
         <div class="max-w-7xl mx-auto flex space-x-1 px-4 sm:px-6">
-            <button data-tab="tab-spells" class="nav-tab active-tab flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold border-b-2 border-fel text-fel whitespace-nowrap transition">
+            <button data-tab="tab-guide" class="nav-tab active-tab flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold border-b-2 border-fel text-fel whitespace-nowrap transition">
+                <i class="fa-solid fa-book-open"></i> Hela guiden
+            </button>
+            <button data-tab="tab-spells" class="nav-tab flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">
                 <i class="fa-solid fa-wand-magic-sparkles"></i> Spells & Rotation
             </button>
             <button data-tab="tab-talents" class="nav-tab flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">
@@ -195,15 +197,88 @@
     <!-- Main Content Container -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-        <!-- TAB 1: SPELLS & ROTATION -->
+        <section id="tab-guide" class="tab-content space-y-6">
+            <div class="bg-cardbg border border-borderbg rounded-xl p-5 sm:p-7 shadow-lg">
+                <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
+                    <div class="max-w-3xl">
+                        <p class="text-xs uppercase tracking-wider text-fel font-bold mb-2">Horde · Undead/Forsaken · nivå 1–60</p>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-100 gold-header">Warlock + Undead: hela guiden</h2>
+                        <p class="text-sm text-slate-300 mt-3 leading-relaxed">En praktisk guide till att levla, välja demon, hantera resurser och bidra i grupp. WoW Forever ändrar delar av Classic; använd därför spelets aktuella verktygstips när de skiljer sig från statiska värden här.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" onclick="setLevel(1); document.querySelector('[data-tab=tab-spells]').click()" class="bg-purple-900/60 hover:bg-purple-800 text-purple-200 border border-purple-500/40 text-xs px-3 py-2 rounded-lg transition">Börja på nivå 1</button>
+                        <button type="button" onclick="setLevel(60); document.querySelector('[data-tab=tab-spells]').click()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs px-3 py-2 rounded-lg transition">Visa nivå 60</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <article class="bg-cardbg border border-borderbg rounded-xl p-5">
+                    <h3 class="font-bold text-fel mb-2">Vad gör en Warlock?</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Warlock är en distansklass som kombinerar Shadow- och Fire-skada, skada över tid (DoT), förbannelser, drain-spells och en demon som du styr. Du byter hälsa mot mana med Life Tap, återhämtar dig med drains och skapar Healthstones och Soulstones med Soul Shards.</p>
+                    <p class="text-xs text-slate-400 mt-3 leading-relaxed"><strong class="text-slate-200">Grundloop:</strong> välj rätt demon → låt den ta första aggro när du behöver säkerhet → lägg DoT/Bane och en lämplig Curse → använd wand eller en effektiv spell som filler → drain eller Life Tap efter behov. Avsluta lämpliga mål med Drain Soul för shards.</p>
+                </article>
+                <article class="bg-cardbg border border-borderbg rounded-xl p-5">
+                    <h3 class="font-bold text-purple-300 mb-2">Varför välja Undead?</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Undead, även kallad Forsaken, är en Horde-ras för Warlock. Rasförmågorna kompletterar klassens kontroll och uthållighet: Will of the Forsaken hjälper mot vissa kontroll-effekter, Cannibalize kan återställa hälsa från giltiga lik och Shadow Resistance ger defensiv nytta.</p>
+                    <p class="text-xs text-amber-200/80 mt-3 leading-relaxed">Rasegenskaper och exakta effekter kan vara ändrade i Forever. Läs rasförmågans verktygstips i din klient för måltyper, varaktighet och nedkylning; räkna inte med Classic-värden.</p>
+                </article>
+            </div>
+
+            <article class="bg-cardbg border border-borderbg rounded-xl p-5">
+                <h3 class="font-bold text-slate-100 mb-3">Levla 1–60: vad du fokuserar på</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 text-xs">
+                    <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800"><strong class="text-fel">1–9 · lär grunderna</strong><p class="text-slate-400 mt-1">Använd Imp, lär dig DoT-timing och börja samla shards. Corruption, Life Tap och Bane of Agony kommer tidigt enligt guidens spellmilstolpar.</p></div>
+                    <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800"><strong class="text-fel">10–19 · Voidwalker</strong><p class="text-slate-400 mt-1">Gör demonens klassuppdrag. Voidwalker ger tryggare solospel; bygg threat innan du lägger mycket skada. En wand minskar manaåtgången.</p></div>
+                    <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800"><strong class="text-fel">20–29 · fler verktyg</strong><p class="text-slate-400 mt-1">Lås upp Sayaad och utöka Curse-/Bane-valen. Välj mellan säkerhet, kontroll och skada i stället för att använda samma pet varje pull.</p></div>
+                    <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800"><strong class="text-fel">30–39 · drain och utility</strong><p class="text-slate-400 mt-1">Siphon Life och Felhunter breddar din uthållighet och gruppnytta. Felhunter får Spell Lock senare än själva summon-förmågan; kontrollera spellistan.</p></div>
+                    <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800"><strong class="text-fel">40–49 · kanaliserad skada</strong><p class="text-slate-400 mt-1">Wrack är en channel: använd den när du kan stå still och målet lever tillräckligt länge. Fortsätt använda Felsteed och klassens kontrollverktyg.</p></div>
+                    <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800"><strong class="text-fel">50–60 · fyll rollen</strong><p class="text-slate-400 mt-1">Lär dig sena spells och förbered gruppverktyg, shards och förbrukningsvaror. Bygg för innehållet du spelar; en leveling-prioritet är inte automatiskt en raid- eller PvP-build.</p></div>
+                </div>
+                <p class="text-xs text-slate-400 mt-3">Använd nivåreglaget och flikarna <strong class="text-slate-200">Spells & Rotation</strong>, <strong class="text-slate-200">Talents</strong> och <strong class="text-slate-200">Gear & Quests</strong> för nivåanpassade detaljer.</p>
+            </article>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <article class="bg-cardbg border border-borderbg rounded-xl p-5">
+                    <h3 class="font-bold text-slate-100 mb-3">Välj demon efter uppgiften</h3>
+                    <div class="space-y-2 text-xs">
+                        <p class="text-slate-300"><strong class="text-purple-300">Imp:</strong> tidig skada och gruppbuff; håll koll på manan.</p>
+                        <p class="text-slate-300"><strong class="text-blue-300">Voidwalker:</strong> solospel och säkrare pulls; låt den etablera aggro.</p>
+                        <p class="text-slate-300"><strong class="text-pink-300">Succubus/Incubus:</strong> Seduce-kontroll mot giltiga humanoida mål; använd inte kontroll på mål som gruppen måste slå.</p>
+                        <p class="text-slate-300"><strong class="text-emerald-300">Felhunter:</strong> dispel-/interrupt-nytta mot magi och casters när rätt förmåga är inlärd.</p>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-3">Pet-skada, hot och tillgängliga förmågor påverkas av Forever-versionen. Kontrollera demonens spellbook och tooltip.</p>
+                </article>
+                <article class="bg-cardbg border border-borderbg rounded-xl p-5">
+                    <h3 class="font-bold text-slate-100 mb-3">Så bidrar du i grupp</h3>
+                    <ul class="space-y-2 text-xs text-slate-300 list-disc pl-4">
+                        <li>Fråga gruppen vilken Curse som behövs; använd inte flera Curse-effekter på samma mål om de ersätter varandra.</li>
+                        <li>Använd Banish på rätt demon/elemental, Fear med hänsyn till adds och Seduce bara när gruppen kan hålla kontrollen.</li>
+                        <li>Skapa Healthstones, håll en Soulstone redo när gruppen vill ha en återupplivningsplan och spara shards för Ritual of Summoning.</li>
+                        <li>Byt demon efter mötet: en tank-pet är inte alltid bäst i dungeon, raid eller PvP.</li>
+                    </ul>
+                </article>
+            </div>
+
+            <article class="bg-cardbg border border-borderbg rounded-xl p-5">
+                <h3 class="font-bold text-slate-100 mb-3">Utrustning, talanger och resurser</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div><strong class="text-amber-300">Utrustning</strong><p class="text-slate-400 mt-1">Jämför hela föremålet. Spell Power hjälper skadan; hit minskar missar; Intellect ger större manapool; Stamina ger marginal för Life Tap och inkommande skada. Spirit-värdet beror på Forever-versionens Life Tap-regler.</p></div>
+                    <div><strong class="text-amber-300">Talanger</strong><p class="text-slate-400 mt-1">Affliction är en naturlig leveling-inriktning för DoT/drain-spel. Anpassa poängen efter serverns aktuella träd och din nivå. Den interaktiva fördelningen här är en guidehjälp, inte en live-synkad eller garanterad meta-build.</p></div>
+                    <div><strong class="text-amber-300">Soul Shards</strong><p class="text-slate-400 mt-1">Ta med shards för Healthstone, Soulstone, demonsummons och gruppsummons. Använd Drain Soul på lämpliga mål och undvik att fylla väskan med shards du inte behöver.</p></div>
+                </div>
+            </article>
+        </section>
+
+        <!-- TAB: SPELLS & ROTATION -->
         <section id="tab-spells" class="tab-content space-y-6">
             
             <!-- Phase Overview Header -->
             <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg relative overflow-hidden">
                 <div class="flex items-start justify-between">
                     <div>
-                        <div class="text-xs uppercase tracking-wider text-fel font-bold mb-1">Aktuell Level-Fas</div>
-                        <h2 id="phase-title" class="text-xl sm:text-2xl font-bold text-slate-100 gold-header">Leveling Fash</h2>
+                        <div class="text-xs uppercase tracking-wider text-fel font-bold mb-1">Aktuell levelingfas</div>
+                        <h2 id="phase-title" class="text-xl sm:text-2xl font-bold text-slate-100 gold-header">Levelingfas</h2>
                         <p id="phase-description" class="text-sm text-slate-300 mt-2 max-w-3xl leading-relaxed">
                             Beskrivning av spelstil för denna nivån...
                         </p>
@@ -243,7 +318,7 @@
                                 <span class="font-bold text-blue-300 text-sm">Voidwalker</span>
                                 <span class="bg-blue-950 text-blue-300 text-[10px] px-1.5 py-0.5 rounded font-mono">Lvl 10</span>
                             </div>
-                            <p class="text-slate-400">Din primära tank från level 10. Låt den bygga threat innan DoTs. Blizzard ökade Voidwalkerns grundhälsa i hotfixen 6 nov 2026; undvik gamla Classic-petvärden.</p>
+                            <p class="text-slate-400">Din primära tank-pet för tryggare solospel. Låt den bygga threat innan DoTs och kontrollera dess aktuella hälsa och förmågor i klienten.</p>
                         </div>
                         <div class="mt-2 pt-2 border-t border-blue-900/30 text-[10px] text-blue-400">Roll: Solo Tank & Emergency Shield</div>
                     </div>
@@ -291,9 +366,9 @@
             <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-borderbg pb-4 mb-4">
                     <div>
-                        <h2 class="text-xl font-bold text-slate-100 gold-header">Forever Affliction Talent Path</h2>
+                        <h2 class="text-xl font-bold text-slate-100 gold-header">Affliction: föreslagen leveling-väg</h2>
                         <p class="text-xs text-slate-400 mt-1">
-                            Forever Affliction 42/9/0 leveling-order. Talangpoäng vid vald level: <span id="talent-points-available" class="text-fel font-bold">51 poäng</span>. Högre-levelval är teori; kontrollera i spelet.
+                            Interaktiv, förenklad fördelning för Affliction/Demonology. Talangpoäng vid vald level: <span id="talent-points-available" class="text-fel font-bold">51 poäng</span>. Talangträdet kan ändras i Forever; jämför alltid med klienten innan du följer en build.
                         </p>
                     </div>
                     <div class="flex items-center gap-2">
@@ -334,7 +409,7 @@
         <section id="tab-gear" class="tab-content hidden space-y-6">
             <div class="bg-cardbg border border-borderbg rounded-xl p-5 shadow-lg">
                 <h3 class="text-lg font-bold text-slate-100 mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-chart-line text-amber-500"></i> Stat-Prioriteringar för Leveling
+                    <i class="fa-solid fa-chart-line text-amber-500"></i> Stats att jämföra under leveling
                 </h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     <div class="bg-slate-900/80 p-3.5 rounded-lg border border-purple-900/40">
@@ -550,7 +625,7 @@
                     <i class="fa-solid fa-radar"></i>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold text-slate-100 gold-header">Meta-källor för WoW Forever</h3>
+                    <h3 class="text-lg font-bold text-slate-100 gold-header">Källor och guidens status</h3>
                     <p class="text-xs text-slate-400">Vald guide-level: <span id="scanner-modal-lvl" class="text-fel font-bold">60</span></p>
                 </div>
             </div>
